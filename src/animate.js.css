@@ -1,0 +1,27 @@
+.am-transparent {
+  opacity: 0;
+}
+
+.am-above {
+  -webkit-transform: translateY(-2500%);
+  -moz-transform: translateY(-2500%);
+  transform: translateY(-2500%);
+}
+
+.am-below {
+  -webkit-transform: translateY(2500%);
+  -moz-transform: translateY(2500%);
+  transform: translateY(2500%);
+}
+
+.am-left {
+  -webkit-transform: translateX(-2500%);
+  -moz-transform: translateX(-2500%);
+  transform: translateX(-2500%);
+}
+
+.am-right {
+  -webkit-transform: translateX(2500%);
+  -moz-transform: translateX(2500%);
+  transform: translateX(2500%);
+}
