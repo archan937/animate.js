@@ -6,43 +6,57 @@
 }
 
 body {
-  color: #CCC;
   font-family: "League Gothic";
   text-align: center;
+}
+
+h1 {
+  margin-top: calc(25% - 120px);
+  margin-bottom: 6px;
+  font-size: 80px;
+}
+
+a, small, strong {
+  font-size: 36px;
+  text-transform: uppercase;
+}
+
+a, strong {
+  padding: 5px 8px 0;
+  color: #EEE;
+  display: inline-block;
   background: black;
-  overflow: hidden;
+}
+
+a {
+  margin: 0 20px;
+  text-decoration: none;
+}
+
+a::after {
+  clear: left;
+}
+
+a:hover {
+  color: black;
+  background: #EEE;
 }
 
 a.github {
   margin-left: 1px;
-  -webkit-filter: invert(80%);
-  filter: invert(80%);
   background: none;
 }
 
 a.github:hover {
   -webkit-filter: invert(100%);
   filter: invert(100%);
+  background: none;
 }
 
-h1 {
-  top: 50%;
-  left: 50%;
-  width: 700px;
-  margin-top: -30px;
-  margin-left: -350px;
-  font-size: 70px;
-  position: absolute;
-  line-height: 20px;
+small a {
+  margin: 0 4px;
 }
 
-h2 {
-  top: 50%;
-  left: 50%;
-  width: 700px;
-  margin-top: 40px;
-  margin-left: -350px;
-  font-size: 40px;
-  position: absolute;
-  line-height: 20px;
+strong {
+  font-weight: normal;
 }
