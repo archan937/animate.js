@@ -41,16 +41,22 @@ mod.define('Animate.Elements', function() {
         var
           hidden = hasClass(el, hide_class),
           style = computed(el),
-          inline = style['display'] == 'inline',
+          body = computed(document.body),
+          absolute = style['position'] == 'absolute',
           animated_el = document.createElement('div'),
           placeholder;
+
+        if (!absolute) {
+          addClass(animated_el, 'no_margin');
+        }
 
         animated_el.setAttribute('style',
           [
             'display: block',
-            'top: ' + el.bounds.top + 'px',
-            'left: ' + el.bounds.left + 'px',
-            ((style['display'] == 'block') ? ('width: ' + computed(document.body).width) : '')
+            'top: ' + (absolute ? '0' : (el.bounds.top + 'px')),
+            'left: ' + (absolute ? body['marginLeft'] : (el.bounds.left + 'px')),
+            ((style['display'] == 'block') ? ('width: ' + body.width) : ''),
+            (absolute ? 'height: 100%' : '')
           ].join('; ')
         );
 
@@ -60,7 +66,7 @@ mod.define('Animate.Elements', function() {
             'height: ' + el.bounds.height + 'px',
             'margin: ' + style['margin'],
             'padding: ' + style['padding'],
-            'display: ' + (inline ? 'inline-block' : style['display']),
+            'display: ' + ((style['display'] == 'inline') ? 'inline-block' : style['display']),
             'line-height: ' + style['line-height']
           ].join('; ')
         });

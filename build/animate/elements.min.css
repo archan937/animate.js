@@ -1,1 +1,1 @@
-div.am-wrapper,div.am-wrapper>div{position:absolute}.am-hide{opacity:0}div.am-wrapper{top:0;left:0;width:100%;min-height:100%;overflow:hidden}div.am-wrapper>div *{margin:0!important}
+div.am-wrapper,div.am-wrapper>div{position:absolute}.am-hide{opacity:0}div.am-wrapper{top:0;left:0;width:100%;min-height:100%;overflow:hidden}div.am-wrapper>div.no_margin *{margin:0!important}

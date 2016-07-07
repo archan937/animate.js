@@ -15,6 +15,6 @@ div.am-wrapper > div {
   position: absolute;
 }
 
-div.am-wrapper > div * {
+div.am-wrapper > div.no_margin * {
   margin: 0 !important;
 }
