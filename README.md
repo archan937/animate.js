@@ -14,6 +14,8 @@ That's it!
 
 To configure Animate.js, all you have to do is put the configuration in the query string:
 
+  * <code>controls</code> - Control the animation sequence with the common presentation controls
+  * <code>timing</code> - The timing used to automatically run the animation sequence in seconds separated by `+` (e.g. `timing=1.5+3.5+3.75+4.35+6+7`)
   * <code>animation</code> - The animation to use when transitioning between pages (see the [list](https://github.com/archan937/animate.js/blob/master/src/animate.js#L492))
   * <code>next-slide</code> - This enables [presentation mode](http://archan937.github.io/animate.js/6.html) and specifies which URL to open when going to the next slide (URI encoded when necessary)
   * <code>selector</code> - The CSS selector used for binding the click event to start animating (default: <code>a</code>)
@@ -28,7 +30,8 @@ Nice, right? :)
 
 Thanks to the following resources, writing Animate.js was possible:
 
-  * <code>Codrops Demo</code> - Animations are based on the [Codrops Page Transitions demo](http://tympanus.net/Development/PageTransitions)
+  * <code>animate.css</code> - Animate.js used [animate.css](https://daneden.github.io/animate.css) to animate page elements
+  * <code>Codrops Demo</code> - Page transitions are based on the [Codrops Page Transitions demo](http://tympanus.net/Development/PageTransitions)
   * <code>html2canvas</code> - Animate.js uses [html2canvas](https://github.com/niklasvh/html2canvas) for taking snapshots of the current page
 
 ### Contact me
