@@ -15,7 +15,7 @@ var mod = (function() {
       var props = evil(object, varname),
           i, mod, prop;
       for (i = 1; i < arguments.length; i++) {
-        var mod = modules[arguments[i]];
+        mod = modules[arguments[i]];
         for (prop in mod) {
           props[prop] = mod[prop];
           evil(object, 'var ' + prop + ' = ' + varname + '.' + prop);

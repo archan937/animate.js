@@ -7,7 +7,7 @@ mod.define('Config', function() {
       for (var param in config) {
         registered.push({
           param: param,
-          function: config[param]
+          func: config[param]
         });
       }
     },
@@ -18,7 +18,7 @@ mod.define('Config', function() {
         for (i = 0; i < registered.length; i++) {
           spec = registered[i];
           if (spec.param == param) {
-            spec.function(script.params[param]);
+            spec.func(script.params[param]);
           }
         }
       }
