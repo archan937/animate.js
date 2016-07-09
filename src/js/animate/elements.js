@@ -1,5 +1,6 @@
 mod.define('Animate.Elements', function() {
   var
+    initialized = false,
     timing = [],
     step = 0,
     lock = 0,
@@ -204,11 +205,12 @@ mod.define('Animate.Elements', function() {
           timing = arguments;
         }
 
-        lock = step + timing.length;
-
-        forEach(timing, function(seconds) {
-          setTimeout(next, parseFloat(seconds) * 1000);
-        });
+        if (initialized) {
+          lock = step + timing.length;
+          forEach(timing, function(seconds) {
+            setTimeout(next, parseFloat(seconds) * 1000);
+          });
+        }
       },
 
       config: {
@@ -223,6 +225,7 @@ mod.define('Animate.Elements', function() {
       ready: function() {
         setTimeout(function() {
           Elements.next();
+          initialized = true;
           Elements.time();
         }, 50);
       }

@@ -140,7 +140,9 @@ mod.define('Animate.Pages', function() {
       captures = animation[0].match(/(\d+):(\d+)\s+(.*)/) || [],
       css_classes, css_class, delay, x, y, stack = [], f;
 
-    page_in.style.display = 'none';
+    if (page_in) {
+      page_in.style.display = 'none';
+    }
 
     if (captures.length) {
       x = parseInt(captures[1], 10);

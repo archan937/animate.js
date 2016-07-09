@@ -18,13 +18,6 @@ task :release, :version do |task, args|
         timestamp.strftime("%Y-%m-%d %H:%M:%S +0100 (%a, %d %B %Y)")
       end
     end
-    if line.include?("// STYLESHEET1")
-      "    css1.innerHTML = #{File.open("src/animate.js.css").readlines.join("\n").inspect};\n"
-    elsif line.include?("// STYLESHEET2")
-      "    css2.innerHTML = #{File.open("src/animate.css").readlines.join("\n").inspect};\n"
-    else
-      line
-    end
   end.flatten
 
   # Define variables
