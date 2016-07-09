@@ -12,7 +12,7 @@ That's it!
 
 ### Configuration
 
-To configure Animate.js, all you have to do is put the configuration in the query string:
+To configure Animate.js, all you have to do is put the configuration in the `query string` of animate.js URL:
 
   * <code>controls</code> - Control the animation sequence with the common presentation controls
   * <code>timing</code> - The timing used to automatically run the animation sequence in seconds separated by `+` (e.g. `timing=1.5+3.5+3.75+4.35+6+7`)
@@ -24,7 +24,28 @@ So for example:
 
     <script src="http://archan937.github.io/animate.js/animate.js?next-slide=.%2F7.html&animation=openSesame"></script>
 
-Nice, right? :)
+Nice, huh? :)
+
+For now, please refer to [the source code](https://github.com/archan937/animate.js/blob/master/src/js/animate/pages.js#L248) for a list of all the available page transition animations. Though the list needs to be cleaned up.
+
+### Animating page elements
+
+To animate page elements, you need to add a data attribute `data-am-x` to them of which `x` is the step within the animation sequence.
+
+A few examples:
+
+- <code>data-am-0</code> - Animate page elements on page load
+- <code>data-am-1</code> - Animate page elements when `Animate.next()` has been invoked (either by animation timing, page controls or programtically)
+
+The value of the data attribute is either of the animation classes of [animate.css](https://daneden.github.io/animate.css).
+
+To initially hide an element on page load, add the CSS class `am-hide` to it.
+
+So for example:
+
+    <h1 class="am-hide" data-am-0="bounceInDown" data-am-3="flipOutX">Hi there! Meet animate.js!</h1>
+    <h2 class="am-hide" data-am-1="bounceInLeft" data-am-2="flipOutY">Add slick animations to your web pages and page transitions</h2>
+    <h1 class="am-hide" data-am-4="rollIn" data-am-5="rollOut">Using animate.js is really easy!</h1>
 
 ### Credits
 
