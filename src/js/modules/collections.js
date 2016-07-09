@@ -28,7 +28,7 @@ mod.define('Collections', function() {
 
     forEach: function(array, f) {
       for (var i = 0; i < array.length; i += 1) {
-        f(array[i], i == array.length - 1);
+        f(array[i], i, i == array.length - 1);
       }
     },
 

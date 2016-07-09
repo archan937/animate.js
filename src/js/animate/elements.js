@@ -37,7 +37,7 @@ mod.define('Animate.Elements', function() {
         el.bounds = bounds(el);
       });
 
-      forEach(elements, function(el, last) {
+      forEach(elements, function(el, index, last) {
         var
           hidden = hasClass(el, hide_class),
           style = computed(el),
@@ -216,12 +216,15 @@ mod.define('Animate.Elements', function() {
           bindControls();
         },
         timing: function(value) {
-          Elements.time.apply(this, value.split('+'));
+          timing = value.split('+');
         }
       },
 
       ready: function() {
-        Elements.next();
+        setTimeout(function() {
+          Elements.next();
+          Elements.time();
+        }, 50);
       }
 
     }

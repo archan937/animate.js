@@ -138,18 +138,48 @@ mod.define('Animate.Pages', function() {
       page_out = pageOut(),
       page_in = pageIn(),
       captures = animation[0].match(/(\d+):(\d+)\s+(.*)/) || [],
-      css_classes, i;
+      css_classes, css_class, delay, x, y, stack = [], f;
+
+    page_in.style.display = 'none';
 
     if (captures.length) {
-      splitCanvas(page_out.children[0], parseInt(captures[1], 10), parseInt(captures[2], 10));
+      x = parseInt(captures[1], 10);
+      y = parseInt(captures[2], 10);
+
+      splitCanvas(page_out.children[0], x, y);
       bind(page_out.children[0].children[page_out.children[0].children.length - 1], animationEnd(), function() {
         pageOutEnd(url);
       });
 
       css_classes = (' ' + captures[3]).split(',');
-      for (i = 0; i < css_classes.length; i += 1) {
-        addClass(page_out.children[0].children[i], css_classes[i].replace(/\s+/, ' am-page-'));
+      for (i = 0; i < (x * y); i += 1) {
+        delay = 0;
+
+        classes = select((css_classes[i] || css_classes.slice(-1)[0]).split(' '), function(css_class) {
+          var milliseconds = parseInt((css_class.match(/delay(\d+)/) || [])[1]);
+          if (milliseconds) {
+            delay = milliseconds;
+          }
+          return !milliseconds;
+        });
+
+        stack.push([classes.join(' ').replace(/\s+/, ' am-page-'), delay]);
       }
+
+      delay = 0;
+
+      forEach(stack, function(array, i) {
+        var f = function() {
+          addClass(page_out.children[0].children[i], array[0]);
+        };
+        if (array[1]) {
+          delay += array[1];
+          setTimeout(f, delay);
+        } else {
+          f();
+        }
+      });
+
     } else {
       bind(page_out, animationEnd(), function() {
         pageOutEnd(url);
@@ -158,8 +188,20 @@ mod.define('Animate.Pages', function() {
     }
 
     if (page_in) {
+      delay = 0;
+
+      css_class = animation[1].replace(/ delay(\d+)/, function(m, m1) {
+        delay = parseInt(m1);
+        return '';
+      });
+
+      f = function() {
+        page_in.style.display = 'block';
+        addClass(page_in, 'am-page-' + css_class.replace(' ', ' am-page-'));
+      };
+
       bind(page_in, animationEnd(), pageInEnd);
-      addClass(page_in, 'am-page-' + animation[1].replace(' ', ' am-page-'));
+      delay ? setTimeout(f, delay) : f();
     }
   },
 
@@ -215,6 +257,7 @@ mod.define('Animate.Pages', function() {
     'pushToTopEasing'    : ['moveToTopEasing am-page-ontop', 'moveFromBottom'],
     'pushToBottomEasing' : ['moveToBottomEasing am-page-ontop', 'moveFromTop'],
     'openSesame'         : ['2:1 pullLeftDoor, pullRightDoor', 'rotateInNewspaper delay300'],
+    'mosaic'             : ['4:3 rotateLeftSideFirst am-page-ontop delay50', 'rotateInNewspaper delay1250'],
     14: ['scaleDown', 'moveFromRight am-page-ontop'],
     15: ['scaleDown', 'moveFromLeft am-page-ontop'],
     16: ['scaleDown', 'moveFromBottom am-page-ontop'],
