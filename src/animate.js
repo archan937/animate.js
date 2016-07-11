@@ -407,6 +407,25 @@ mod.define('Inject', function() {
         el.innerHTML = registered.css[i];
         head.insertBefore(el, head.childNodes[0]);
       }
+    },
+
+    injectCSS: function(selector, style) {
+      var el = $('style.injected')[0], head, css = [], attr;
+
+      if (!el) {
+        head = ensureHead();
+        el = document.createElement('style');
+        addClass(el, 'injected');
+        head.insertBefore(el, head.childNodes[0]);
+      }
+
+      css.push('\n' + selector + ' {');
+      for(attr in style) {
+        css.push('  ' + attr + ': ' + style[attr] + ';');
+      };
+      css.push('}');
+
+      el.innerHTML += css.join('\n') + '\n';
     }
   };
 });
@@ -489,6 +508,7 @@ mod.define('Animate.Elements', function() {
     step = 0,
     lock = 0,
     hide_class = 'am-hide',
+    defined_durations = [],
 
   currentKey = function() {
     return 'data-am-' + step;
@@ -586,10 +606,24 @@ mod.define('Animate.Elements', function() {
 
   animate = function() {
     animateEach(function(el, animated_el, key) {
-      var animation = el.getAttribute(key);
+      var animation = el.getAttribute(key), duration, durationClass;
 
       if (animation.match('|')) {
         animation = pickRandom(animation.split('|'));
+      }
+
+      animation = animation.replace(/\b(\d+(\.\d+)?m?s)/, function(m) {
+        duration = m;
+        durationClass = 'am-' + duration.replace('.', '_');
+        return durationClass;
+      });
+
+      if (duration && (indexOf(duration, defined_durations) == -1)) {
+        injectCSS('.' + durationClass, {
+          '-webkit-animation-duration': duration + ' !important',
+          'animation-duration': duration + ' !important'
+        });
+        defined_durations.push(duration);
       }
 
       addClass(animated_el, 'animated ' + animation);

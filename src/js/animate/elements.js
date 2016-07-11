@@ -5,6 +5,7 @@ mod.define('Animate.Elements', function() {
     step = 0,
     lock = 0,
     hide_class = 'am-hide',
+    defined_durations = [],
 
   currentKey = function() {
     return 'data-am-' + step;
@@ -102,10 +103,24 @@ mod.define('Animate.Elements', function() {
 
   animate = function() {
     animateEach(function(el, animated_el, key) {
-      var animation = el.getAttribute(key);
+      var animation = el.getAttribute(key), duration, durationClass;
 
       if (animation.match('|')) {
         animation = pickRandom(animation.split('|'));
+      }
+
+      animation = animation.replace(/\b(\d+(\.\d+)?m?s)/, function(m) {
+        duration = m;
+        durationClass = 'am-' + duration.replace('.', '_');
+        return durationClass;
+      });
+
+      if (duration && (indexOf(duration, defined_durations) == -1)) {
+        injectCSS('.' + durationClass, {
+          '-webkit-animation-duration': duration + ' !important',
+          'animation-duration': duration + ' !important'
+        });
+        defined_durations.push(duration);
       }
 
       addClass(animated_el, 'animated ' + animation);

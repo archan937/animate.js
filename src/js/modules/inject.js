@@ -34,6 +34,25 @@ mod.define('Inject', function() {
         el.innerHTML = registered.css[i];
         head.insertBefore(el, head.childNodes[0]);
       }
+    },
+
+    injectCSS: function(selector, style) {
+      var el = $('style.injected')[0], head, css = [], attr;
+
+      if (!el) {
+        head = ensureHead();
+        el = document.createElement('style');
+        addClass(el, 'injected');
+        head.insertBefore(el, head.childNodes[0]);
+      }
+
+      css.push('\n' + selector + ' {');
+      for(attr in style) {
+        css.push('  ' + attr + ': ' + style[attr] + ';');
+      };
+      css.push('}');
+
+      el.innerHTML += css.join('\n') + '\n';
     }
   };
 });
