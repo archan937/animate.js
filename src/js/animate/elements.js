@@ -192,8 +192,9 @@ mod.define('Animate.Elements', function() {
         step = 0;
         lock = 0;
 
+        next();
+
         if (timing.length) {
-          next();
           Elements.time.apply(this);
         }
 
