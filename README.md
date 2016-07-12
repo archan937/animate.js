@@ -5,9 +5,9 @@ Add slick animations to your web pages and page transitions.
 ### Installation
 
 Setting up <code>animate.js</code> is only a matter of adding a simple script include tag:
-
+```html
     <script src="http://archan937.github.io/animate.js/animate.js"></script>
-
+```
 That's it!
 
 ### Configuration
@@ -21,9 +21,9 @@ To configure Animate.js, all you have to do is put the configuration in the `que
   * <code>selector</code> - The CSS selector used for binding the click event to start animating (default: <code>a</code>)
 
 So for example:
-
+```html
     <script src="http://archan937.github.io/animate.js/animate.js?next-slide=.%2F7.html&animation=openSesame"></script>
-
+```
 Nice, huh? :)
 
 For now, please refer to [the source code](https://github.com/archan937/animate.js/blob/master/src/js/animate/pages.js#L248) for a list of all the available page transition animations. Though the list needs to be cleaned up.
@@ -44,11 +44,11 @@ To initially hide an element on page load, add the CSS class `am-hide` to it.
 Finally, you can adjust the duration of the animation by adding a class in the format of `\d+(\.\d+)?m?s` (e.g. `1s` or `100ms`)
 
 So for example:
-
+```html
     <h1 class="am-hide" data-am-0="bounceInDown" data-am-3="flipOutX">Hi there! Meet animate.js!</h1>
     <h2 class="am-hide" data-am-1="bounceInLeft 0.5s" data-am-2="flipOutY">Add slick animations to your web pages and page transitions</h2>
     <h1 class="am-hide" data-am-4="rollIn" data-am-5="rollOut">Using animate.js is really easy!</h1>
-
+```
 ### Credits
 
 Thanks to the following resources, writing Animate.js was possible:
