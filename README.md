@@ -20,7 +20,7 @@ To configure Animate.js, all you have to do is put the configuration in the `que
   * <code>next-slide</code> - This enables [presentation mode](http://archan937.github.io/animate.js/6.html) and specifies which URL to open when going to the next slide (URI encoded when necessary)
   * <code>selector</code> - The CSS selector used for binding the click event to start animating (default: <code>a</code>)
 
-So for example:
+For instance:
 
     <script src="http://archan937.github.io/animate.js/animate.js?next-slide=.%2F7.html&animation=openSesame"></script>
 
@@ -35,7 +35,7 @@ To animate page elements, you need to add a data attribute `data-am-x` to them o
 A few examples:
 
 - <code>data-am-0</code> - Animate page elements on page load
-- <code>data-am-1</code> - Animate page elements when `Animate.next()` has been invoked (either by animation timing, page controls or programtically)
+- <code>data-am-1</code> - Animate page elements when `Animate.next()` has been invoked (either by animation timing, page controls or programmatically)
 
 The value of the data attribute is either of the animation classes of [animate.css](https://daneden.github.io/animate.css).
 
