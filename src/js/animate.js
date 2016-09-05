@@ -10,18 +10,7 @@ if (typeof(Animate) == 'undefined') {
 // * $Date: {date} $
 // *
 
-Animate = (function() {
-
-  mod.extend(this, 'Introspect');
-  mod.extend(this, 'Collections');
-  mod.extend(this, 'Elements');
-  mod.extend(this, 'Events');
-  mod.extend(this, 'Controls');
-  mod.extend(this, 'Inject');
-  mod.extend(this, 'Config');
-
-  mod.extend(this, 'Animate.Elements');
-  mod.extend(this, 'Animate.Pages');
+Animate = define(function() {
 
   registerJS(@@html2canvasJS);
   registerCSS(@@animateCSS);
@@ -54,7 +43,18 @@ Animate = (function() {
     $: $,
     time: Elements.time,
     load: Pages.load
-  }
-})();
+  };
+
+},
+  'Introspect',
+  'Collections',
+  'Elements',
+  'Events',
+  'Controls',
+  'Inject',
+  'Config',
+  'Animate.Elements',
+  'Animate.Pages'
+);
 
 }
