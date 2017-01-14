@@ -11,6 +11,18 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
 
+    cssmin: {
+      target: {
+        files: [{
+          expand: true,
+          cwd: 'src/css',
+          src: ['**/*.css'],
+          dest: 'build/css',
+          ext: '.min.css'
+        }]
+      }
+    },
+
     concat: {
       options: {
         separator: '\n'
@@ -22,68 +34,64 @@ module.exports = function(grunt) {
           'src/js/animate/*.js',
           'src/js/animate.js'
         ],
-        dest: 'src/animate.js'
-      }
-    },
-
-    cssmin: {
-      target: {
-        files: [{
-          expand: true,
-          cwd: 'src/css',
-          src: ['**/*.css'],
-          dest: 'build',
-          ext: '.min.css'
-        }]
+        dest: 'build/js/animate.js'
       }
     },
 
     uglify: {
       dist: {
         files: {
-          'build/ext/html2canvas.min.js': ['src/js/ext/html2canvas.js']
+          'build/js/ext/html2canvas.min.js': ['src/js/ext/html2canvas.js']
         }
       }
     },
 
     replace: {
       dist: {
-        options: {
-          patterns: [{
-            match: 'animateCSS',
-            replacement: util.inspect(grunt.file.read('build/ext/animate.min.css'))
-          }, {
-            match: 'html2canvasJS',
-            replacement: util.inspect(grunt.file.read('build/ext/html2canvas.min.js'))
-          }, {
-            match: 'elementsCSS',
-            replacement: util.inspect(grunt.file.read('build/animate/elements.min.css'))
-          }, {
-            match: 'pagesCSS',
-            replacement: util.inspect(grunt.file.read('build/animate/pages.min.css'))
-          }]
-        },
         files: [{
           expand: true,
           flatten: true,
-          src: ['src/animate.js'],
-          dest: 'src/'
-        }]
+          src: ['build/js/animate.js'],
+          dest: 'build/js'
+        }],
+        options: {
+          patterns: [{
+            match: 'animateCSS',
+            replacement: function() {
+              return util.inspect(grunt.file.read('build/css/ext/animate.min.css'));
+            }
+          }, {
+            match: 'html2canvasJS',
+            replacement: function() {
+              return util.inspect(grunt.file.read('build/js/ext/html2canvas.min.js'));
+            }
+          }, {
+            match: 'elementsCSS',
+            replacement: function() {
+              return util.inspect(grunt.file.read('build/css/animate/elements.min.css'));
+            }
+          }, {
+            match: 'pagesCSS',
+            replacement: function() {
+              return util.inspect(grunt.file.read('build/css/animate/pages.min.css'));
+            }
+          }]
+        }
       }
     },
 
     watch: {
       files: ['Gruntfile.js', 'src/js/**/*.js', 'src/css/**/*.css'],
-      tasks: ['concat', 'cssmin', 'uglify', 'replace']
+      tasks: ['cssmin', 'concat', 'uglify', 'replace']
     }
 
   });
 
-  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
+  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-replace');
   grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.registerTask('default', ['concat', 'cssmin', 'uglify', 'replace', 'watch']);
+  grunt.registerTask('default', ['cssmin', 'concat', 'uglify', 'replace', 'watch']);
 
 };
