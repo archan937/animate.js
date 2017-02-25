@@ -11,6 +11,22 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
 
+    sass: {
+      dist: {
+        options: {
+          style: 'compressed',
+          sourcemap: 'none'
+        },
+        files: [{
+          expand: true,
+          cwd: 'src/css',
+          src: ['**/*.sass'],
+          dest: 'build/css',
+          ext: '.min.css'
+        }]
+      }
+    },
+
     cssmin: {
       target: {
         files: [{
@@ -56,14 +72,19 @@ module.exports = function(grunt) {
         }],
         options: {
           patterns: [{
+            match: 'html2canvasJS',
+            replacement: function() {
+              return util.inspect(grunt.file.read('build/js/ext/html2canvas.min.js'));
+            }
+          }, {
             match: 'animateCSS',
             replacement: function() {
               return util.inspect(grunt.file.read('build/css/ext/animate.min.css'));
             }
           }, {
-            match: 'html2canvasJS',
+            match: 'dataAmCSS',
             replacement: function() {
-              return util.inspect(grunt.file.read('build/js/ext/html2canvas.min.js'));
+              return util.inspect(grunt.file.read('build/css/animate/data-am.min.css'));
             }
           }, {
             match: 'elementsCSS',
@@ -81,17 +102,18 @@ module.exports = function(grunt) {
     },
 
     watch: {
-      files: ['Gruntfile.js', 'src/js/**/*.js', 'src/css/**/*.css'],
-      tasks: ['cssmin', 'concat', 'uglify', 'replace']
+      files: ['Gruntfile.js', 'src/js/**/*.js', 'src/css/**/*.{sass,css}'],
+      tasks: ['sass', 'cssmin', 'concat', 'uglify', 'replace']
     }
 
   });
 
+  grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-replace');
   grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.registerTask('default', ['cssmin', 'concat', 'uglify', 'replace', 'watch']);
+  grunt.registerTask('default', ['sass', 'cssmin', 'concat', 'uglify', 'replace', 'watch']);
 
 };

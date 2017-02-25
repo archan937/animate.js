@@ -77,22 +77,22 @@ mod.define('Animate.Pages', function() {
   prepPageOut = function(snapshot) {
     var
       body = document.body,
-      page_out;
+      pgOut;
 
     if (pageIn()) {
-      page_out = document.createElement('div');
-      page_out.id = 'am-page-out';
-      addClass(page_out, 'am-page');
-      body.appendChild(page_out);
+      pgOut = document.createElement('div');
+      pgOut.id = 'am-page-out';
+      addClass(pgOut, 'am-page');
+      body.appendChild(pgOut);
     } else {
-      page_out = innerWrap(body, 'div', {
+      pgOut = innerWrap(body, 'div', {
         'id': 'am-page-out',
         'class': 'am-page'
       }).children[0];
-      page_out.innerHTML = '';
+      pgOut.innerHTML = '';
     }
 
-    page_out.appendChild(snapshot);
+    pgOut.appendChild(snapshot);
   },
 
   prepBody = function() {
@@ -101,64 +101,64 @@ mod.define('Animate.Pages', function() {
 
   prepPageIn = function(url) {
     var
-      page_in = pageIn(),
+      pgIn = pageIn(),
       iframe,
-      iframe_document;
+      iframeDocument;
 
     url += url.match(/\?\w+/) ? '&' : '?';
     url += 't=' + (new Date()).getTime();
 
     if (url.match(/^\w+:\/\//)) {
-      page_in && document.body.removeChild(page_in);
+      pgIn && document.body.removeChild(pgIn);
       return;
     }
 
-    if (page_in) {
-      iframe = $('iframe', page_in)[0];
+    if (pgIn) {
+      iframe = $('iframe', pgIn)[0];
     } else {
-      page_in = document.createElement('div');
-      page_in.id = 'am-page-in';
-      page_in.classList.add('am-page');
+      pgIn = document.createElement('div');
+      pgIn.id = 'am-page-in';
+      pgIn.classList.add('am-page');
 
       iframe = document.createElement('iframe');
-      page_in.appendChild(iframe);
-      document.body.appendChild(page_in);
+      pgIn.appendChild(iframe);
+      document.body.appendChild(pgIn);
     }
 
-    iframe_document = iframe.contentWindow.document;
-    iframe_document.open();
-    iframe_document.write('<body onload="window.location.replace(\'' + url + '\')">');
-    iframe_document.close();
+    iframeDocument = iframe.contentWindow.document;
+    iframeDocument.open();
+    iframeDocument.write('<body onload="window.location.replace(\'' + url + '\')">');
+    iframeDocument.close();
   },
 
   animatePages = function(animation, url) {
     animation = animations[animation || randomAnimation()];
 
     var
-      page_out = pageOut(),
-      page_in = pageIn(),
+      pgOut = pageOut(),
+      pgIn = pageIn(),
       captures = animation[0].match(/(\d+):(\d+)\s+(.*)/) || [],
-      css_classes, css_class, delay, x, y, stack = [], f;
+      cssClasses, cssClass, delay, x, y, stack = [], f;
 
-    if (page_in) {
-      page_in.style.display = 'none';
+    if (pgIn) {
+      pgIn.style.display = 'none';
     }
 
     if (captures.length) {
       x = parseInt(captures[1], 10);
       y = parseInt(captures[2], 10);
 
-      splitCanvas(page_out.children[0], x, y);
-      bind(page_out.children[0].children[page_out.children[0].children.length - 1], animationEnd(), function() {
+      splitCanvas(pgOut.children[0], x, y);
+      bind(pgOut.children[0].children[pgOut.children[0].children.length - 1], animationEnd(), function() {
         pageOutEnd(url);
       });
 
-      css_classes = (' ' + captures[3]).split(',');
+      cssClasses = (' ' + captures[3]).split(',');
       for (i = 0; i < (x * y); i += 1) {
         delay = 0;
 
-        classes = select((css_classes[i] || css_classes.slice(-1)[0]).split(' '), function(css_class) {
-          var milliseconds = parseInt((css_class.match(/delay(\d+)/) || [])[1]);
+        classes = select((cssClasses[i] || cssClasses.slice(-1)[0]).split(' '), function(cssClass) {
+          var milliseconds = parseInt((cssClass.match(/delay(\d+)/) || [])[1]);
           if (milliseconds) {
             delay = milliseconds;
           }
@@ -172,7 +172,7 @@ mod.define('Animate.Pages', function() {
 
       forEach(stack, function(array, i) {
         var f = function() {
-          addClass(page_out.children[0].children[i], array[0]);
+          addClass(pgOut.children[0].children[i], array[0]);
         };
         if (array[1]) {
           delay += array[1];
@@ -183,26 +183,26 @@ mod.define('Animate.Pages', function() {
       });
 
     } else {
-      bind(page_out, animationEnd(), function() {
+      bind(pgOut, animationEnd(), function() {
         pageOutEnd(url);
       });
-      addClass(page_out, 'am-page-' + animation[0].replace(' ', ' am-page-'));
+      addClass(pgOut, 'am-page-' + animation[0].replace(' ', ' am-page-'));
     }
 
-    if (page_in) {
+    if (pgIn) {
       delay = 0;
 
-      css_class = animation[1].replace(/ delay(\d+)/, function(m, m1) {
+      cssClass = animation[1].replace(/ delay(\d+)/, function(m, m1) {
         delay = parseInt(m1);
         return '';
       });
 
       f = function() {
-        page_in.style.display = 'block';
-        addClass(page_in, 'am-page-' + css_class.replace(' ', ' am-page-'));
+        pgIn.style.display = 'block';
+        addClass(pgIn, 'am-page-' + cssClass.replace(' ', ' am-page-'));
       };
 
-      bind(page_in, animationEnd(), pageInEnd);
+      bind(pgIn, animationEnd(), pageInEnd);
       delay ? setTimeout(f, delay) : f();
     }
   },
@@ -216,101 +216,110 @@ mod.define('Animate.Pages', function() {
   pageInEnd = function(event) {
     var
       iframe = $('iframe', pageIn())[0],
-      iframe_document = iframe.contentWindow.document,
-      page_out = pageOut(),
+      iframeDocument = iframe.contentWindow.document,
+      pgOut = pageOut(),
       complete = function() {
-        document.title = iframe_document.title;
+        document.title = iframeDocument.title;
         document.body.removeAttribute('data-am-animation');
         document.body.removeAttribute('data-am-next-slide');
 
-        if (page_out) {
-          document.body.removeChild(page_out);
+        if (pgOut) {
+          document.body.removeChild(pgOut);
         }
 
         if (event) {
           history.pushState({
             title: document.title,
             path: iframe.contentWindow.window.location.pathname
-          }, document.title, iframe_document.URL.replace(/(\?|&)t=\d+/, ''));
+          }, document.title, iframeDocument.URL.replace(/(\?|&)t=\d+/, ''));
         }
 
         pageIn().setAttribute('class', 'am-page');
         iframe.focus();
       };
 
-    if (iframe_document.readyState == 'complete') {
+    if (iframeDocument.readyState == 'complete') {
       complete();
     } else {
-      iframe_document.onload = complete;
+      iframeDocument.onload = complete;
     }
   },
 
+  showHideElements = function() {
+    forEach($('[data-am-0],[data-am-1],[data-am-2],[data-am-3],[data-am-4],[data-am-5]'), function(el) {
+      addClass(el, 'am-hide'); // TODO: only if first animation is an entrance animation!
+    });
+
+    var style = $('#css-data-am')[0];
+    style.parentNode.removeChild(style);
+  },
+
   animations = {
-    'pushToLeft'         : ['moveToLeft', 'moveFromRight'],
-    'pushToRight'        : ['moveToRight', 'moveFromLeft'],
-    'pushToBottom'       : ['moveToBottom', 'moveFromTop'],
-    'pushToTop'          : ['moveToTop', 'moveFromBottom'],
-    'slideFromRight'     : ['idle', 'moveFromRight am-page-ontop'],
-    'slideFromLeft'      : ['idle', 'moveFromLeft am-page-ontop'],
-    'slideFromBottom'    : ['idle', 'moveFromBottom am-page-ontop'],
-    'slideFromTop'       : ['idle', 'moveFromTop am-page-ontop'],
-    'pushToLeftEasing'   : ['moveToLeftEasing am-page-ontop', 'moveFromRight'],
-    'pushToRightEasing'  : ['moveToRightEasing am-page-ontop', 'moveFromLeft'],
-    'pushToTopEasing'    : ['moveToTopEasing am-page-ontop', 'moveFromBottom'],
-    'pushToBottomEasing' : ['moveToBottomEasing am-page-ontop', 'moveFromTop'],
-    'openSesame'         : ['2:1 pullLeftDoor, pullRightDoor', 'rotateInNewspaper delay300'],
-    'mosaic'             : ['4:3 rotateLeftSideFirst am-page-ontop delay50', 'rotateInNewspaper delay1250'],
-    14: ['scaleDown', 'moveFromRight am-page-ontop'],
-    15: ['scaleDown', 'moveFromLeft am-page-ontop'],
-    16: ['scaleDown', 'moveFromBottom am-page-ontop'],
-    17: ['scaleDown', 'moveFromTop am-page-ontop'],
-    18: ['scaleDown', 'scaleUpDown delay300'],
-    19: ['scaleDownUp', 'scaleUp delay300'],
-    20: ['moveToLeft am-page-ontop', 'scaleUp'],
-    21: ['moveToRight am-page-ontop', 'scaleUp'],
-    22: ['moveToTop am-page-ontop', 'scaleUp'],
-    23: ['moveToBottom am-page-ontop', 'scaleUp'],
-    24: ['scaleDownCenter', 'scaleUpCenter delay400'],
-    25: ['rotateRightSideFirst', 'moveFromRight delay20 am-page-ontop'],
-    26: ['rotateLeftSideFirst', 'moveFromLeft delay20 am-page-ontop'],
-    27: ['rotateTopSideFirst', 'moveFromTop delay20 am-page-ontop'],
-    28: ['rotateBottomSideFirst', 'moveFromBottom delay20 am-page-ontop'],
-    29: ['flipOutRight', 'flipInLeft delay500'],
-    30: ['flipOutLeft', 'flipInRight delay500'],
-    31: ['flipOutTop', 'flipInBottom delay500'],
-    32: ['flipOutBottom', 'flipInTop delay500'],
-    'rotateFall': ['rotateFall am-page-ontop', 'scaleUp'],
-    34: ['rotateOutNewspaper', 'rotateInNewspaper delay500'],
-    35: ['rotatePushLeft', 'moveFromRight'],
-    36: ['rotatePushRight', 'moveFromLeft'],
-    37: ['rotatePushTop', 'moveFromBottom'],
-    38: ['rotatePushBottom', 'moveFromTop'],
-    39: ['rotatePushLeft', 'rotatePullRight delay180'],
-    40: ['rotatePushRight', 'rotatePullLeft delay180'],
-    41: ['rotatePushTop', 'rotatePullBottom delay180'],
-    42: ['rotatePushBottom', 'rotatePullTop delay180'],
-    43: ['rotateFoldLeft', 'moveFromRightFade'],
-    44: ['rotateFoldRight', 'moveFromLeftFade'],
-    45: ['rotateFoldTop', 'moveFromBottomFade'],
-    46: ['rotateFoldBottom', 'moveFromTopFade'],
-    47: ['moveToRightFade', 'rotateUnfoldLeft'],
-    48: ['moveToLeftFade', 'rotateUnfoldRight'],
-    49: ['moveToBottomFade', 'rotateUnfoldTop'],
-    50: ['moveToTopFade', 'rotateUnfoldBottom'],
-    51: ['rotateRoomLeftOut am-page-ontop', 'rotateRoomLeftIn'],
-    52: ['rotateRoomRightOut am-page-ontop', 'rotateRoomRightIn'],
-    53: ['rotateRoomTopOut am-page-ontop', 'rotateRoomTopIn'],
-    54: ['rotateRoomBottomOut am-page-ontop', 'rotateRoomBottomIn'],
-    55: ['rotateCubeLeftOut am-page-ontop', 'rotateCubeLeftIn'],
-    56: ['rotateCubeRightOut am-page-ontop', 'rotateCubeRightIn'],
-    57: ['rotateCubeTopOut am-page-ontop', 'rotateCubeTopIn'],
-    58: ['rotateCubeBottomOut am-page-ontop', 'rotateCubeBottomIn'],
-    59: ['rotateCarouselLeftOut am-page-ontop', 'rotateCarouselLeftIn'],
-    60: ['rotateCarouselRightOut am-page-ontop', 'rotateCarouselRightIn'],
-    61: ['rotateCarouselTopOut am-page-ontop', 'rotateCarouselTopIn'],
-    62: ['rotateCarouselBottomOut am-page-ontop', 'rotateCarouselBottomIn'],
-    63: ['rotateSidesOut', 'rotateSidesIn delay200'],
-    64: ['rotateSlideOut', 'rotateSlideIn']
+    'pushToLeft'          : ['moveToLeft', 'moveFromRight'],
+    'pushToRight'         : ['moveToRight', 'moveFromLeft'],
+    'pushToBottom'        : ['moveToBottom', 'moveFromTop'],
+    'pushToTop'           : ['moveToTop', 'moveFromBottom'],
+    'slideFromRight'      : ['idle', 'moveFromRight am-page-ontop'],
+    'slideFromLeft'       : ['idle', 'moveFromLeft am-page-ontop'],
+    'slideFromBottom'     : ['idle', 'moveFromBottom am-page-ontop'],
+    'slideFromTop'        : ['idle', 'moveFromTop am-page-ontop'],
+    'pushToLeftEasing'    : ['moveToLeftEasing am-page-ontop', 'moveFromRight'],
+    'pushToRightEasing'   : ['moveToRightEasing am-page-ontop', 'moveFromLeft'],
+    'pushToTopEasing'     : ['moveToTopEasing am-page-ontop', 'moveFromBottom'],
+    'pushToBottomEasing'  : ['moveToBottomEasing am-page-ontop', 'moveFromTop'],
+    'openSesame'          : ['2:1 pullLeftDoor, pullRightDoor', 'rotateInNewspaper delay300'],
+    'mosaic'              : ['4:3 rotateLeftSideFirst am-page-ontop delay50', 'rotateInNewspaper delay1250'],
+    'scaleDownFromRight'  : ['scaleDown', 'moveFromRight am-page-ontop'],
+    'scaleDownFromLeft'   : ['scaleDown', 'moveFromLeft am-page-ontop'],
+    'scaleDownFromBottom' : ['scaleDown', 'moveFromBottom am-page-ontop'],
+    'scaleDownFromTop'    : ['scaleDown', 'moveFromTop am-page-ontop'],
+    'scaleDownUpDown'     : ['scaleDown', 'scaleUpDown delay300'],
+    'scaleDownUpCenter'   : ['scaleDownCenter', 'scaleUpCenter delay400'],
+    'scaleDownUp'         : ['scaleDownUp', 'scaleUp delay300'],
+    'toLeftScaleUp'       : ['moveToLeft am-page-ontop', 'scaleUp'],
+    'toRightScaleUp'      : ['moveToRight am-page-ontop', 'scaleUp'],
+    'toTopScaleUp'        : ['moveToTop am-page-ontop', 'scaleUp'],
+    'toBottomScaleUp'     : ['moveToBottom am-page-ontop', 'scaleUp'],
+    'glueLeftFromRight'   : ['rotateRightSideFirst', 'moveFromRight delay20 am-page-ontop'],
+    'glueRightFromLeft'   : ['rotateLeftSideFirst', 'moveFromLeft delay20 am-page-ontop'],
+    'glueBottomFromTop'   : ['rotateTopSideFirst', 'moveFromTop delay20 am-page-ontop'],
+    'glueTopFromBottom'   : ['rotateBottomSideFirst', 'moveFromBottom delay20 am-page-ontop'],
+    'flipRight'           : ['flipOutRight', 'flipInLeft delay500'],
+    'flipLeft'            : ['flipOutLeft', 'flipInRight delay500'],
+    'flipTop'             : ['flipOutTop', 'flipInBottom delay500'],
+    'flipBottom'          : ['flipOutBottom', 'flipInTop delay500'],
+    'rotateFall'          : ['rotateFall am-page-ontop', 'scaleUp'],
+    'rotateNewspaper'     : ['rotateOutNewspaper', 'rotateInNewspaper delay500'],
+    'pushLeftFromRight'   : ['rotatePushLeft', 'moveFromRight'],
+    'pushRightFromLeft'   : ['rotatePushRight', 'moveFromLeft'],
+    'pushTopFromBottom'   : ['rotatePushTop', 'moveFromBottom'],
+    'pushBottomFromTop'   : ['rotatePushBottom', 'moveFromTop'],
+    'pushLeftPullRight'   : ['rotatePushLeft', 'rotatePullRight delay180'],
+    'pushRightPullLeft'   : ['rotatePushRight', 'rotatePullLeft delay180'],
+    'pushTopPullBottom'   : ['rotatePushTop', 'rotatePullBottom delay180'],
+    'pushBottomPullTop'   : ['rotatePushBottom', 'rotatePullTop delay180'],
+    'rotateToLeft'        : ['rotateFoldLeft', 'moveFromRightFade'],
+    'rotateToRight'       : ['rotateFoldRight', 'moveFromLeftFade'],
+    'rotateToTop'         : ['rotateFoldTop', 'moveFromBottomFade'],
+    'rotateToBottom'      : ['rotateFoldBottom', 'moveFromTopFade'],
+    'rotateFromLeft'      : ['moveToRightFade', 'rotateUnfoldLeft'],
+    'rotateFromRight'     : ['moveToLeftFade', 'rotateUnfoldRight'],
+    'rotateFromTop'       : ['moveToBottomFade', 'rotateUnfoldTop'],
+    'rotateFromBottom'    : ['moveToTopFade', 'rotateUnfoldBottom'],
+    'roomToLeft'          : ['rotateRoomLeftOut am-page-ontop', 'rotateRoomLeftIn'],
+    'roomToRight'         : ['rotateRoomRightOut am-page-ontop', 'rotateRoomRightIn'],
+    'roomToTop'           : ['rotateRoomTopOut am-page-ontop', 'rotateRoomTopIn'],
+    'roomToBottom'        : ['rotateRoomBottomOut am-page-ontop', 'rotateRoomBottomIn'],
+    'cubeToLeft'          : ['rotateCubeLeftOut am-page-ontop', 'rotateCubeLeftIn'],
+    'cubeToRight'         : ['rotateCubeRightOut am-page-ontop', 'rotateCubeRightIn'],
+    'cubeToTop'           : ['rotateCubeTopOut am-page-ontop', 'rotateCubeTopIn'],
+    'cubeToBottom'        : ['rotateCubeBottomOut am-page-ontop', 'rotateCubeBottomIn'],
+    'carouselToLeft'      : ['rotateCarouselLeftOut am-page-ontop', 'rotateCarouselLeftIn'],
+    'carouselToRight'     : ['rotateCarouselRightOut am-page-ontop', 'rotateCarouselRightIn'],
+    'carouselToTop'       : ['rotateCarouselTopOut am-page-ontop', 'rotateCarouselTopIn'],
+    'carouselToBottom'    : ['rotateCarouselBottomOut am-page-ontop', 'rotateCarouselBottomIn'],
+    'rotateSides'         : ['rotateSidesOut', 'rotateSidesIn delay200'],
+    'slide'               : ['rotateSlideOut', 'rotateSlideIn']
   },
 
   randomAnimation = function() {
@@ -384,6 +393,8 @@ mod.define('Animate.Pages', function() {
             }
           }
         }, 150);
+
+        showHideElements();
 
         on(selector, 'click', function(e, target) {
           var

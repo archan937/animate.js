@@ -4,8 +4,8 @@ mod.define('Animate.Elements', function() {
     timing = [],
     step = 0,
     lock = 0,
-    hide_class = 'am-hide',
-    defined_durations = [],
+    hideClass = 'am-hide',
+    definedDurations = [],
 
   currentKey = function() {
     return 'data-am-' + step;
@@ -35,24 +35,24 @@ mod.define('Animate.Elements', function() {
       document.body.appendChild(wrapper);
 
       forEach(elements, function(el) {
-        el.initial_class || (el.initial_class = select(el.classList, function(css_class) { return css_class == hide_class; }).join(' '));
+        el.initialClass || (el.initialClass = select(el.classList, function(cssClass) { return cssClass == hideClass; }).join(' '));
         el.bounds = bounds(el);
       });
 
       forEach(elements, function(el, index, last) {
         var
-          hidden = hasClass(el, hide_class),
+          hidden = hasClass(el, hideClass),
           style = computed(el),
           body = computed(document.body),
           absolute = style['position'] == 'absolute',
-          animated_el = document.createElement('div'),
+          animatedEl = document.createElement('div'),
           placeholder;
 
         if (!absolute) {
-          addClass(animated_el, 'no_margin');
+          addClass(animatedEl, 'no_margin');
         }
 
-        animated_el.setAttribute('style',
+        animatedEl.setAttribute('style',
           [
             'display: block',
             'top: ' + (absolute ? '0' : (el.bounds.top + 'px')),
@@ -75,34 +75,34 @@ mod.define('Animate.Elements', function() {
 
         delete el.bounds;
 
-        animated_el.appendChild(el);
-        wrapper.appendChild(animated_el);
+        animatedEl.appendChild(el);
+        wrapper.appendChild(animatedEl);
 
         if (hidden) {
-          removeClass(el, hide_class);
+          removeClass(el, hideClass);
         }
 
-        bind(animated_el, animationEnd(), function() {
+        bind(animatedEl, animationEnd(), function() {
           placeholder.parentNode.insertBefore(el, placeholder);
           placeholder.parentNode.removeChild(placeholder);
           if (hidden) {
-            removeClass(el, hide_class);
+            removeClass(el, hideClass);
           } else {
-            addClass(el, hide_class);
+            addClass(el, hideClass);
           }
           if (last) {
             wrapper.parentNode.removeChild(wrapper);
           }
         });
 
-        f(el, animated_el, key);
+        f(el, animatedEl, key);
       });
 
     }
   },
 
   animate = function() {
-    animateEach(function(el, animated_el, key) {
+    animateEach(function(el, animatedEl, key) {
       var animation = el.getAttribute(key), duration, durationClass;
 
       if (animation.match('|')) {
@@ -115,15 +115,15 @@ mod.define('Animate.Elements', function() {
         return durationClass;
       });
 
-      if (duration && (indexOf(duration, defined_durations) == -1)) {
+      if (duration && (indexOf(duration, definedDurations) == -1)) {
         injectCSS('.' + durationClass, {
           '-webkit-animation-duration': duration + ' !important',
           'animation-duration': duration + ' !important'
         });
-        defined_durations.push(duration);
+        definedDurations.push(duration);
       }
 
-      addClass(animated_el, 'animated ' + animation);
+      addClass(animatedEl, 'animated ' + animation);
 
       el.setAttribute(key, animation);
       el.setAttribute('data-animated', '');
@@ -131,19 +131,90 @@ mod.define('Animate.Elements', function() {
   },
 
   reverseAnimate = function(el) {
-    animateEach(function(el, animated_el, key) {
-      var animation, reverse_animation;
+    animateEach(function(el, animatedEl, key) {
+      var animation, reverseAnimation;
 
       animation = el.getAttribute(key);
-      reverse_animation = animation.replace(/([a-z])(In|Out)([A-Z]|$)/g, function(s, m1, m2, m3) {
+      reverseAnimation = animation.replace(/([a-z])(In|Out)([A-Z]|$)/g, function(s, m1, m2, m3) {
         return m1 + {In: 'Out', Out: 'In'}[m2] + m3;
       }).replace(/([a-z])(Up|Down)([A-Z]|$)/g, function(s, m1, m2, m3) {
         return m1 + {Up: 'Down', Down: 'Up'}[m2] + m3;
       });
 
-      addClass(animated_el, 'animated ' + reverse_animation);
+      addClass(animatedEl, 'animated ' + reverseAnimation);
     });
-  };
+  },
+
+  animationsIn = [
+    'bounceIn',
+    'bounceInDown',
+    'bounceInLeft',
+    'bounceInRight',
+    'bounceInUp',
+    'fadeIn',
+    'fadeInDown',
+    'fadeInDownBig',
+    'fadeInLeft',
+    'fadeInLeftBig',
+    'fadeInRight',
+    'fadeInRightBig',
+    'fadeInUp',
+    'fadeInUpBig',
+    'flipInX',
+    'flipInY',
+    'lightSpeedIn',
+    'rotateIn',
+    'rotateInDownLeft',
+    'rotateInDownRight',
+    'rotateInUpLeft',
+    'rotateInUpRight',
+    'slideInUp',
+    'slideInDown',
+    'slideInLeft',
+    'slideInRight',
+    'zoomIn',
+    'zoomInDown',
+    'zoomInLeft',
+    'zoomInRight',
+    'zoomInUp',
+    'rollIn'
+  ],
+
+  animationsOut = [
+    'bounceOut',
+    'bounceOutDown',
+    'bounceOutLeft',
+    'bounceOutRight',
+    'bounceOutUp',
+    'fadeOut',
+    'fadeOutDown',
+    'fadeOutDownBig',
+    'fadeOutLeft',
+    'fadeOutLeftBig',
+    'fadeOutRight',
+    'fadeOutRightBig',
+    'fadeOutUp',
+    'fadeOutUpBig',
+    'flipOutX',
+    'flipOutY',
+    'lightSpeedOut',
+    'rotateOut',
+    'rotateOutDownLeft',
+    'rotateOutDownRight',
+    'rotateOutUpLeft',
+    'rotateOutUpRight',
+    'slideOutUp',
+    'slideOutDown',
+    'slideOutLeft',
+    'slideOutRight',
+    'zoomOut',
+    'zoomOutDown',
+    'zoomOutLeft',
+    'zoomOutRight',
+    'zoomOutUp',
+    'rollOut',
+    'hinge'
+  ];
 
   return {
     Elements: {
@@ -200,7 +271,7 @@ mod.define('Animate.Elements', function() {
 
       reset: function() {
         forEach($('[data-animated]'), function(el) {
-          addClass(el, el.initial_class || '');
+          addClass(el, el.initialClass || '');
           el.removeAttribute('data-animated');
         });
 
@@ -244,6 +315,11 @@ mod.define('Animate.Elements', function() {
           initialized = true;
           Elements.time();
         }, 50);
+      },
+
+      animations: {
+        in: animationsIn,
+        out: animationsOut
       }
 
     }

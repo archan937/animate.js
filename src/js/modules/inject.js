@@ -1,7 +1,7 @@
 mod.define('Inject', function() {
   var
     registered = {
-      js: [], css: []
+      js: [], css: [], html: []
     },
 
   ensureHead = function() {
@@ -12,27 +12,45 @@ mod.define('Inject', function() {
   };
 
   return {
-    registerJS: function(code) {
-      registered.js.push(code);
+    registerJS: function() {
+      registered.js.push(arguments);
     },
 
-    registerCSS: function(code) {
-      registered.css.push(code);
+    registerCSS: function() {
+      registered.css.push(arguments);
+    },
+
+    registerHTML: function(code) {
+      registered.html.push(code);
     },
 
     injectCode: function() {
-      var head = ensureHead(), i, el;
+      var head = ensureHead(), i, el, val;
 
       for (i = 0; i < registered.js.length; i++) {
+        val = registered.js[i];
         el = document.createElement('script');
-        el.innerHTML = registered.js[i];
+        if (val[1])
+          el.id = val[1];
+        el.innerHTML = val[0];
         head.insertBefore(el, head.childNodes[0]);
       }
 
       for (i = 0; i < registered.css.length; i++) {
+        val = registered.css[i];
         el = document.createElement('style');
-        el.innerHTML = registered.css[i];
+        if (val[1])
+          el.id = val[1];
+        el.innerHTML = val[0];
         head.insertBefore(el, head.childNodes[0]);
+      }
+
+      for (i = 0; i < registered.html.length; i++) {
+        el = document.createElement('div');
+        el.innerHTML = registered.html[i];
+        while (el.children.length > 0) {
+          document.body.appendChild(el.children[0]);
+        }
       }
     },
 

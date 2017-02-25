@@ -14,6 +14,7 @@ Animate = define(function() {
 
   registerJS(@@html2canvasJS);
   registerCSS(@@animateCSS);
+  registerCSS(@@dataAmCSS, 'css-data-am');
   registerCSS(@@elementsCSS);
   registerCSS(@@pagesCSS);
 

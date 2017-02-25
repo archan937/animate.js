@@ -64,13 +64,12 @@ For support, remarks and requests, please mail me at [pm_engel@icloud.com](mailt
 ### TODO
 
 * Complement Keynote animations
-* Complete naming available animations
 * Accept a self defined animation (by passing a two-length array?)
 * Animate form submits
 
 ### License
 
-Copyright (c) 2016 Paul Engel, released under the MIT license
+Copyright (c) 2017 Paul Engel, released under the MIT license
 
 [http://gettopup.com](http://gettopup.com) - [http://github.com/archan937](http://github.com/archan937) - [http://twitter.com/archan937](http://twitter.com/archan937) - [pm_engel@icloud.com](mailto:pm_engel@icloud.com)
 
