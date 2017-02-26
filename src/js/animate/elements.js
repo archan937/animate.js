@@ -18,54 +18,63 @@ mod.define('Animate.Elements', function() {
   animateEach = function(f) {
     var key = currentKey(),
         elements = currentElements(),
-        wrapper;
+        wrapper,
+        body = $('body');
 
     if (elements.length) {
 
-      wrapper = document.createElement('div');
-      wrapper.setAttribute('style', [
-        'height: ' + (
-          bounds(document.body).height +
-          parseInt(computed(document.body).marginTop) +
-          parseInt(computed(document.body).marginBottom)
+      wrapper = $('<div>');
+      wrapper.css({
+        width: '100%',
+        height: (
+          body.height() +
+          parseInt(body.computedStyle().marginTop) +
+          parseInt(body.computedStyle().marginBottom)
         ) + 'px'
-      ].join('; '));
+      });
 
-      addClass(wrapper, 'am-wrapper');
-      document.body.appendChild(wrapper);
+      wrapper.addClass('am-wrapper');
+      wrapper.appendTo(body);
 
-      forEach(elements, function(el) {
+      elements.each(function(index, el) {
         el.initialClass || (el.initialClass = select(el.classList, function(cssClass) { return cssClass == hideClass; }).join(' '));
         el.bounds = bounds(el);
       });
 
-      forEach(elements, function(el, index, last) {
+      elements.each(function(index, el) {
+        el = $(el);
+
         var
-          hidden = hasClass(el, hideClass),
-          style = computed(el),
-          body = computed(document.body),
+          bounds = el[0].bounds,
+          hidden = el.hasClass(hideClass),
+          style = el.computedStyle(),
+          body = $('body').computedStyle(),
           absolute = style['position'] == 'absolute',
-          animatedEl = document.createElement('div'),
+          animatedEl = $('<div>'),
           placeholder;
 
-        if (!absolute) {
-          addClass(animatedEl, 'no_margin');
+        delete el[0].bounds;
+
+        if (absolute) {
+          animatedEl.css({height: '100%'});
+        } else {
+          animatedEl.addClass('no_margin');
         }
 
-        animatedEl.setAttribute('style',
-          [
-            'display: block',
-            'top: ' + (absolute ? '0' : (el.bounds.top + 'px')),
-            'left: ' + (absolute ? body['marginLeft'] : (el.bounds.left + 'px')),
-            ((style['display'] == 'block') ? ('width: ' + body.width) : ''),
-            (absolute ? 'height: 100%' : '')
-          ].join('; ')
-        );
+        if (style['display'] == 'block') {
+          animatedEl.css({width: body['width']});
+        }
 
-        placeholder = outerWrap(el, 'div', {
+        animatedEl.css({
+          display: 'block',
+          top: (absolute ? '0' : (bounds.top + 'px')),
+          left: (absolute ? body['marginLeft'] : (bounds.left + 'px')),
+        });
+
+        placeholder = el.outerWrap('div', {
           style: [
-            'width: ' + el.bounds.width + 'px',
-            'height: ' + el.bounds.height + 'px',
+            'width: ' + bounds.width + 'px',
+            'height: ' + bounds.height + 'px',
             'margin: ' + style['margin'],
             'padding: ' + style['padding'],
             'display: ' + ((style['display'] == 'inline') ? 'inline-block' : style['display']),
@@ -73,25 +82,25 @@ mod.define('Animate.Elements', function() {
           ].join('; ')
         });
 
-        delete el.bounds;
-
-        animatedEl.appendChild(el);
-        wrapper.appendChild(animatedEl);
+        animatedEl.append(el);
+        wrapper.append(animatedEl);
 
         if (hidden) {
-          removeClass(el, hideClass);
+          el.removeClass(hideClass);
         }
 
-        bind(animatedEl, animationEnd(), function() {
-          placeholder.parentNode.insertBefore(el, placeholder);
-          placeholder.parentNode.removeChild(placeholder);
+        animatedEl.bind(animationEnd(), function() {
+          placeholder.before(el);
+          placeholder.remove();
+
           if (hidden) {
-            removeClass(el, hideClass);
+            el.removeClass(hideClass);
           } else {
-            addClass(el, hideClass);
+            el.addClass(hideClass);
           }
-          if (last) {
-            wrapper.parentNode.removeChild(wrapper);
+
+          if (index == elements.length - 1) {
+            wrapper.remove();
           }
         });
 
@@ -103,7 +112,7 @@ mod.define('Animate.Elements', function() {
 
   animate = function() {
     animateEach(function(el, animatedEl, key) {
-      var animation = el.getAttribute(key), duration, durationClass;
+      var animation = el.attr(key), duration, durationClass;
 
       if (animation.match('|')) {
         animation = pickRandom(animation.split('|'));
@@ -123,10 +132,10 @@ mod.define('Animate.Elements', function() {
         definedDurations.push(duration);
       }
 
-      addClass(animatedEl, 'animated ' + animation);
+      animatedEl.addClass('animated ' + animation);
 
-      el.setAttribute(key, animation);
-      el.setAttribute('data-animated', '');
+      el.attr(key, animation);
+      el.attr('data-animated', '');
     });
   },
 
@@ -134,14 +143,14 @@ mod.define('Animate.Elements', function() {
     animateEach(function(el, animatedEl, key) {
       var animation, reverseAnimation;
 
-      animation = el.getAttribute(key);
+      animation = el.attr(key);
       reverseAnimation = animation.replace(/([a-z])(In|Out)([A-Z]|$)/g, function(s, m1, m2, m3) {
         return m1 + {In: 'Out', Out: 'In'}[m2] + m3;
       }).replace(/([a-z])(Up|Down)([A-Z]|$)/g, function(s, m1, m2, m3) {
         return m1 + {Up: 'Down', Down: 'Up'}[m2] + m3;
       });
 
-      addClass(animatedEl, 'animated ' + reverseAnimation);
+      animatedEl.addClass('animated ' + reverseAnimation);
     });
   },
 
@@ -270,9 +279,10 @@ mod.define('Animate.Elements', function() {
       },
 
       reset: function() {
-        forEach($('[data-animated]'), function(el) {
-          addClass(el, el.initialClass || '');
-          el.removeAttribute('data-animated');
+        $('[data-animated]').each(function(index, el) {
+          $(el)
+            .addClass(el.initialClass || '')
+            .removeAttr('data-animated');
         });
 
         step = 0;

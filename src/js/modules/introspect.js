@@ -1,7 +1,7 @@
 mod.define('Introspect', function() {
   return {
     script: (function() {
-      var id = 'dummy', dummy, script, src, params = {}, pairs, i, key_value, key;
+      var id = 'dummy', dummy, script, src, params = {}, pairs, pair, key, i;
       document.write('<script id="' + id + '"></script>');
 
       dummy = document.getElementById(id);
@@ -13,13 +13,14 @@ mod.define('Introspect', function() {
 
       for (i = 0; i < pairs.length; i += 1) {
         if (pairs[i] != '') {
-          key_value = pairs[i].split('=');
-          key = key_value[0].replace(/^\s+|\s+$/g, '').toLowerCase();
-          params[key] = (key_value.length == 1) || key_value[1].replace(/^\s+|\s+$/g, '');
+          pair = pairs[i].split('=');
+          key = pair[0].replace(/^\s+|\s+$/g, '').toLowerCase();
+          params[key] = (pair.length == 1) || pair[1].replace(/^\s+|\s+$/g, '');
         }
       }
 
       return {
+        el: script,
         path: src.toLowerCase().replace(/[^\/]+\.js.*/, ''),
         params: params
       };
@@ -35,6 +36,14 @@ mod.define('Introspect', function() {
 
     inFrame: function() {
       return parent !== window;
+    },
+
+    pageWidth: function() {
+      return window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    },
+
+    pageHeight: function() {
+      return window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
     },
 
     viewWidth: function() {
@@ -54,17 +63,27 @@ mod.define('Introspect', function() {
     },
 
     bounds: function(el) {
-      var rect = el.getBoundingClientRect();
-      return {
-        top: parseInt(rect.top + viewTop()),
-        left: parseInt(rect.left + viewLeft()),
-        width: parseInt(rect.width),
-        height: parseInt(rect.height)
-      }
+      var
+        rect = el.getBoundingClientRect(),
+        bounds = {
+          top: parseInt(rect.top + viewTop()),
+          left: parseInt(rect.left + viewLeft()),
+          width: parseInt(rect.width),
+          height: parseInt(rect.height)
+        };
+
+      bounds.bottom = pageHeight() - bounds.top - bounds.height;
+      bounds.right = pageWidth() - bounds.left - bounds.width;
+
+      return bounds;
     },
 
     computed: function(el) {
       return window.getComputedStyle(el);
+    },
+
+    root: function(el) {
+      return el.parentNode ? root(el.parentNode) : el;
     }
   };
 });

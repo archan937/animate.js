@@ -38,7 +38,7 @@ mod.define('Animate.Pages', function() {
       width = canvas.clientWidth,
       height = canvas.clientHeight,
       factor = isRetinaDisplay() ? 2.0 : 1.0,
-      wrapper = outerWrap(canvas, 'div', {
+      wrapper = $(canvas).outerWrap('div', {
         style: [
           'top: ' + (canvas.style.top || 0) + 'px',
           'left: ' + (canvas.style.left || 0) + 'px',
@@ -67,36 +67,36 @@ mod.define('Animate.Pages', function() {
           l * factor, t * factor, w * factor, h * factor,
           0, 0, w * factor, h * factor
         );
-        wrapper.appendChild(c);
+        wrapper.append(c);
       }
     }
 
-    canvas.parentNode.removeChild(canvas);
+    $(canvas).remove();
   },
 
   prepPageOut = function(snapshot) {
     var
-      body = document.body,
+      body = $('body'),
       pgOut;
 
     if (pageIn()) {
-      pgOut = document.createElement('div');
-      pgOut.id = 'am-page-out';
-      addClass(pgOut, 'am-page');
-      body.appendChild(pgOut);
+      pgOut = $('<div>');
+      pgOut.attr('id', 'am-page-out');
+      pgOut.addClass('am-page');
+      pgOut.appendTo('body');
     } else {
-      pgOut = innerWrap(body, 'div', {
+      pgOut = body.innerWrap('div', {
         'id': 'am-page-out',
         'class': 'am-page'
-      }).children[0];
-      pgOut.innerHTML = '';
+      }).find('#am-page-out');
+      pgOut.html('');
     }
 
-    pgOut.appendChild(snapshot);
+    pgOut.append(snapshot);
   },
 
   prepBody = function() {
-    addClass(document.body, 'am-wrapper');
+    $('body').addClass('am-wrapper');
   },
 
   prepPageIn = function(url) {
@@ -114,7 +114,7 @@ mod.define('Animate.Pages', function() {
     }
 
     if (pgIn) {
-      iframe = $('iframe', pgIn)[0];
+      iframe = $(pgIn).find('iframe')[0];
     } else {
       pgIn = document.createElement('div');
       pgIn.id = 'am-page-in';
@@ -149,11 +149,13 @@ mod.define('Animate.Pages', function() {
       y = parseInt(captures[2], 10);
 
       splitCanvas(pgOut.children[0], x, y);
-      bind(pgOut.children[0].children[pgOut.children[0].children.length - 1], animationEnd(), function() {
+
+      $(pgOut.children[0].children[pgOut.children[0].children.length - 1]).bind(animationEnd(), function() {
         pageOutEnd(url);
       });
 
       cssClasses = (' ' + captures[3]).split(',');
+
       for (i = 0; i < (x * y); i += 1) {
         delay = 0;
 
@@ -172,7 +174,7 @@ mod.define('Animate.Pages', function() {
 
       forEach(stack, function(array, i) {
         var f = function() {
-          addClass(pgOut.children[0].children[i], array[0]);
+          $(pgOut.children[0].children[i]).addClass(array[0]);
         };
         if (array[1]) {
           delay += array[1];
@@ -183,10 +185,11 @@ mod.define('Animate.Pages', function() {
       });
 
     } else {
-      bind(pgOut, animationEnd(), function() {
-        pageOutEnd(url);
-      });
-      addClass(pgOut, 'am-page-' + animation[0].replace(' ', ' am-page-'));
+      $(pgOut)
+        .bind(animationEnd(), function() {
+          pageOutEnd(url);
+        })
+        .addClass('am-page-' + animation[0].replace(' ', ' am-page-'));
     }
 
     if (pgIn) {
@@ -199,10 +202,11 @@ mod.define('Animate.Pages', function() {
 
       f = function() {
         pgIn.style.display = 'block';
-        addClass(pgIn, 'am-page-' + cssClass.replace(' ', ' am-page-'));
+        $(pgIn)
+          .addClass('am-page-' + cssClass.replace(' ', ' am-page-'));
       };
 
-      bind(pgIn, animationEnd(), pageInEnd);
+      $(pgIn).once(animationEnd(), pageInEnd);
       delay ? setTimeout(f, delay) : f();
     }
   },
@@ -246,12 +250,11 @@ mod.define('Animate.Pages', function() {
   },
 
   showHideElements = function() {
-    forEach($('[data-am-0],[data-am-1],[data-am-2],[data-am-3],[data-am-4],[data-am-5]'), function(el) {
-      addClass(el, 'am-hide'); // TODO: only if first animation is an entrance animation!
+    $('[data-am-0],[data-am-1],[data-am-2],[data-am-3],[data-am-4],[data-am-5]').each(function(index, el) {
+      $(el).addClass('am-hide'); // TODO: only if first animation is an entrance animation!
     });
 
-    var style = $('#css-data-am')[0];
-    style.parentNode.removeChild(style);
+    $('#css-data-am').remove();
   },
 
   animations = {
@@ -398,8 +401,8 @@ mod.define('Animate.Pages', function() {
 
         on(selector, 'click', function(e, target) {
           var
-            url = target.getAttribute('data-am-url') || target.getAttribute('href'),
-            animation = target.getAttribute('data-am-animation');
+            url = target.attr('data-am-url') || target.attr('href'),
+            animation = target.attr('data-am-animation');
 
           if (e.metaKey) {
             window.open(url, '_blank');

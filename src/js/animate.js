@@ -28,7 +28,6 @@ Animate = define(function() {
   registerConfig(Pages.config);
 
   injectCode();
-  respectClicks();
 
   ready(function() {
     configure();
@@ -47,6 +46,7 @@ Animate = define(function() {
   };
 
 },
+  'Identifier',
   'Introspect',
   'Collections',
   'Elements',

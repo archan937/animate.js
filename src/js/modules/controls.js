@@ -1,6 +1,6 @@
 mod.define('Controls', function() {
   var
-    controls_binded = false,
+    controlsBinded = false,
     registered = {
       next: [], back: [], reset: []
     },
@@ -28,10 +28,10 @@ mod.define('Controls', function() {
     },
 
     bindControls: function() {
-      if (!controls_binded) {
+      if (!controlsBinded) {
         bind(document, 'click', function(e) {
           !(e.metaKey || e.shiftKey || e.ctrlKey || e.altKey) &&
-          !closest(e.target || e.srcElement || window.event.target || window.event.srcElement, 'a') &&
+          !$(e.target || e.srcElement || window.event.target || window.event.srcElement).closest('a').length &&
           next(e);
         });
         bind(document, 'keypress', function(e) {
@@ -50,7 +50,7 @@ mod.define('Controls', function() {
               back(e); break;
           }
         });
-        controls_binded = true;
+        controlsBinded = true;
       }
     },
 
