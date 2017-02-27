@@ -1062,6 +1062,14 @@ mod.define('Animate.Elements', function() {
     });
   },
 
+  init = function() {
+    if (!initialized) {
+      Elements.next();
+      initialized = true;
+      Elements.time();
+    }
+  },
+
   animationsIn = [
     'bounceIn',
     'bounceInDown',
@@ -1228,12 +1236,18 @@ mod.define('Animate.Elements', function() {
       },
 
       ready: function() {
-        setTimeout(function() {
-          Elements.next();
-          initialized = true;
-          Elements.time();
-        }, 50);
+        var
+          iframe = inFrame() && parent.Animate && window.frameElement,
+          ms = (iframe && iframe.halt) ? 1250 : 50;
+
+        if (iframe) {
+          delete iframe.halt;
+        }
+
+        setTimeout(init, ms);
       },
+
+      init: init,
 
       animations: {
         in: animationsIn,
@@ -1440,8 +1454,9 @@ mod.define('Animate.Pages', function() {
     }
 
     if (pgIn) {
-      delay = 0;
+      pgIn.children[0].halt = true;
 
+      delay = 0;
       cssClass = animation[1].replace(/ delay(\d+)/, function(m, m1) {
         delay = parseInt(m1);
         return '';
@@ -1459,7 +1474,11 @@ mod.define('Animate.Pages', function() {
   },
 
   pageOutEnd = function(url) {
-    if (!pageIn()) {
+    var pgIn = pageIn(), animate;
+    if (pgIn) {
+      animate = pgIn.children[0].contentWindow.Animate;
+      animate && animate.init && animate.init();
+    } else {
       window.location.href = url;
     }
   },
@@ -1708,6 +1727,7 @@ Animate = define(function() {
     back: back,
     reset: reset,
     $: $,
+    init: Elements.init,
     time: Elements.time,
     load: Pages.load
   };

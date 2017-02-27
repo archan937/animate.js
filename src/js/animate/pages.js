@@ -193,8 +193,9 @@ mod.define('Animate.Pages', function() {
     }
 
     if (pgIn) {
-      delay = 0;
+      pgIn.children[0].halt = true;
 
+      delay = 0;
       cssClass = animation[1].replace(/ delay(\d+)/, function(m, m1) {
         delay = parseInt(m1);
         return '';
@@ -212,7 +213,11 @@ mod.define('Animate.Pages', function() {
   },
 
   pageOutEnd = function(url) {
-    if (!pageIn()) {
+    var pgIn = pageIn(), animate;
+    if (pgIn) {
+      animate = pgIn.children[0].contentWindow.Animate;
+      animate && animate.init && animate.init();
+    } else {
       window.location.href = url;
     }
   },

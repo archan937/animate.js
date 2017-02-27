@@ -41,6 +41,7 @@ Animate = define(function() {
     back: back,
     reset: reset,
     $: $,
+    init: Elements.init,
     time: Elements.time,
     load: Pages.load
   };

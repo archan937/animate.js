@@ -154,6 +154,14 @@ mod.define('Animate.Elements', function() {
     });
   },
 
+  init = function() {
+    if (!initialized) {
+      Elements.next();
+      initialized = true;
+      Elements.time();
+    }
+  },
+
   animationsIn = [
     'bounceIn',
     'bounceInDown',
@@ -320,12 +328,18 @@ mod.define('Animate.Elements', function() {
       },
 
       ready: function() {
-        setTimeout(function() {
-          Elements.next();
-          initialized = true;
-          Elements.time();
-        }, 50);
+        var
+          iframe = inFrame() && parent.Animate && window.frameElement,
+          ms = (iframe && iframe.halt) ? 1250 : 50;
+
+        if (iframe) {
+          delete iframe.halt;
+        }
+
+        setTimeout(init, ms);
       },
+
+      init: init,
 
       animations: {
         in: animationsIn,
