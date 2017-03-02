@@ -238,7 +238,7 @@ mod.define('Animate.Elements', function() {
   ],
 
   showHideElements = function() {
-    $('body *').each(function(index, el) {
+    $('body *').each(function(_index, el) {
       var animation = {index: 99999}, match, index;
       Array.prototype.slice.call(el.attributes).forEach(function(attr) {
         if (match = attr.name.match(/^data-am-(\d+)$/)) {
@@ -367,8 +367,8 @@ mod.define('Animate.Elements', function() {
       init: init,
 
       animations: {
-        in: animationsIn,
-        out: animationsOut
+        show: animationsIn,
+        hide: animationsOut
       }
 
     }

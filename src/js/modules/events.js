@@ -34,7 +34,7 @@ mod.define('Events', function() {
         bind(el, type, fn, true);
       } else {
         var regexp = new RegExp('^' + objectid(el) + ':' + type), prop;
-        for (var prop in events) {
+        for (prop in events) {
           if (events.hasOwnProperty(prop) && prop.match(regexp)) {
             unbind(el, type, prop);
           }

@@ -1,4 +1,6 @@
-var mod = (function() {
+var mod, define;
+
+mod = (function() {
   'use strict';
 
   var modules = {};
@@ -33,7 +35,7 @@ var mod = (function() {
   };
 }());
 
-var define = mod.construct;
+define = mod.construct;
 
 mod.define('Collections', function() {
   return {
@@ -192,9 +194,9 @@ mod.define('Elements', function() {
       },
 
       children: function() {
-        var children = [];
+        var children = [], i;
         children.at = true;
-        for (var i = 0; i < this.childNodes.length; i++) {
+        for (i = 0; i < this.childNodes.length; i++) {
           node = this.childNodes[i];
           if (node instanceof HTMLElement) {
             children.push(node);
@@ -477,8 +479,9 @@ mod.define('Elements', function() {
       },
 
       toShadowDom: function(id) {
-        if (document.body.createShadowRoot) {
-          var body = document.body, el = $('#' + id)[0];
+        var body = document.body, el;
+        if (body.createShadowRoot) {
+          el = $('#' + id)[0];
           if (!el) {
             el = document.createElement('div');
             el.id = id;
@@ -649,7 +652,7 @@ mod.define('Events', function() {
         bind(el, type, fn, true);
       } else {
         var regexp = new RegExp('^' + objectid(el) + ':' + type), prop;
-        for (var prop in events) {
+        for (prop in events) {
           if (events.hasOwnProperty(prop) && prop.match(regexp)) {
             unbind(el, type, prop);
           }
@@ -1146,7 +1149,7 @@ mod.define('Animate.Elements', function() {
   ],
 
   showHideElements = function() {
-    $('body *').each(function(index, el) {
+    $('body *').each(function(_index, el) {
       var animation = {index: 99999}, match, index;
       Array.prototype.slice.call(el.attributes).forEach(function(attr) {
         if (match = attr.name.match(/^data-am-(\d+)$/)) {
@@ -1275,8 +1278,8 @@ mod.define('Animate.Elements', function() {
       init: init,
 
       animations: {
-        in: animationsIn,
-        out: animationsOut
+        show: animationsIn,
+        hide: animationsOut
       }
 
     }

@@ -1,4 +1,6 @@
-var mod = (function() {
+var mod, define;
+
+mod = (function() {
   'use strict';
 
   var modules = {};
@@ -33,4 +35,4 @@ var mod = (function() {
   };
 }());
 
-var define = mod.construct;
+define = mod.construct;

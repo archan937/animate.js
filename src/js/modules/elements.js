@@ -7,9 +7,9 @@ mod.define('Elements', function() {
       },
 
       children: function() {
-        var children = [];
+        var children = [], i;
         children.at = true;
-        for (var i = 0; i < this.childNodes.length; i++) {
+        for (i = 0; i < this.childNodes.length; i++) {
           node = this.childNodes[i];
           if (node instanceof HTMLElement) {
             children.push(node);
@@ -292,8 +292,9 @@ mod.define('Elements', function() {
       },
 
       toShadowDom: function(id) {
-        if (document.body.createShadowRoot) {
-          var body = document.body, el = $('#' + id)[0];
+        var body = document.body, el;
+        if (body.createShadowRoot) {
+          el = $('#' + id)[0];
           if (!el) {
             el = document.createElement('div');
             el.id = id;
