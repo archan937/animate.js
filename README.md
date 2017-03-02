@@ -6,31 +6,31 @@ Add slick animations to your web pages and page transitions.
 
 Setting up <code>animate.js</code> is only a matter of adding a simple script include tag:
 ```html
-    <script src="http://archan937.github.io/animate.js/animate.js"></script>
+    <script src="https://archan937.github.io/animate.js/animate.min.js"></script>
 ```
 That's it!
 
 ### Configuration
 
-To configure Animate.js, all you have to do is put the configuration in the `query string` of animate.js URL:
+To configure Animate.js, all you have to do is put the configuration in the `query string` of the animate.js URL:
 
   * <code>controls</code> - Control the animation sequence with the common presentation controls
   * <code>timing</code> - The timing used to automatically run the animation sequence in seconds separated by `+` (e.g. `timing=1.5+3.5+3.75+4.35+6+7`)
-  * <code>animation</code> - The animation to use when transitioning between pages (see the [list](https://github.com/archan937/animate.js/blob/master/src/animate.js#L492))
-  * <code>next-slide</code> - This enables [presentation mode](http://archan937.github.io/animate.js/6.html) and specifies which URL to open when going to the next slide (URI encoded when necessary)
+  * <code>animation</code> - The animation to use when [transitioning between pages](https://github.com/archan937/animate.js/blob/master/src/js/animate/pages.js#L257)
+  * <code>next-slide</code> - This enables [presentation mode](http://archan937.github.io/animate.js/5.html) and specifies which URL to open when going to the next slide (URI encoded when necessary)
   * <code>selector</code> - The CSS selector used for binding the click event to start animating (default: <code>a</code>)
 
 For instance:
 ```html
-    <script src="http://archan937.github.io/animate.js/animate.js?next-slide=.%2F7.html&animation=openSesame"></script>
+    <script src="http://archan937.github.io/animate.js/animate.min.js?next-slide=.%2F7.html&animation=openSesame"></script>
 ```
 Nice, huh? :)
 
-For now, please refer to [the source code](https://github.com/archan937/animate.js/blob/master/src/js/animate/pages.js#L248) for a list of all the available page transition animations. Though the list needs to be cleaned up.
+For now, please refer to [the source code](https://github.com/archan937/animate.js/blob/master/src/js/animate/pages.js#L257) for a list of all the available page transition animations. Though the list needs to be cleaned up.
 
 ### Animating page elements
 
-To animate page elements, you need to add a data attribute `data-am-x` to them of which `x` is the step within the animation sequence.
+To animate page elements, you need to add a data attribute `data-am-n` to them of which `n` is the step within the animation sequence.
 
 A few examples:
 
@@ -38,8 +38,6 @@ A few examples:
 - <code>data-am-1</code> - Animate page elements when `Animate.next()` has been invoked (either by animation timing, page controls or programmatically)
 
 The value of the data attribute is either of the animation classes of [animate.css](https://daneden.github.io/animate.css).
-
-To initially hide an element on page load, add the CSS class `am-hide` to it.
 
 Finally, you can adjust the duration of the animation by adding a class in the format of `\d+(\.\d+)?m?s` (e.g. `1s` or `100ms`)
 
