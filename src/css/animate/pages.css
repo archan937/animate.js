@@ -68,6 +68,7 @@ body.am-wrapper {
   width: 100%;
   height: 100%;
   position: absolute;
+  background: #222;
   border: 0;
 }
 
