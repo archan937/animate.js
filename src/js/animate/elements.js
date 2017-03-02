@@ -50,6 +50,7 @@ mod.define('Animate.Elements', function() {
           style = el.computedStyle(),
           body = $('body').computedStyle(),
           absolute = style['position'] == 'absolute',
+          inline = !!style['display'].match(/^inline/),
           animatedEl = $('<div>'),
           placeholder;
 
@@ -73,11 +74,11 @@ mod.define('Animate.Elements', function() {
 
         placeholder = el.outerWrap('div', {
           style: [
-            'width: ' + bounds.width + 'px',
-            'height: ' + bounds.height + 'px',
+            'width: ' + (bounds.width - parseInt(style['padding-left'], 10) - parseInt(style['padding-right'], 10)) + 'px',
+            'height: ' + (inline ? 'auto' : (bounds.height + 'px')),
             'margin: ' + style['margin'],
             'padding: ' + style['padding'],
-            'display: ' + ((style['display'] == 'inline') ? 'inline-block' : style['display']),
+            'display: ' + (inline ? 'inline-block' : style['display']),
             'line-height: ' + style['line-height']
           ].join('; ')
         });
@@ -99,7 +100,9 @@ mod.define('Animate.Elements', function() {
             el.addClass(hideClass);
           }
 
-          if (index == elements.length - 1) {
+          animatedEl.remove();
+
+          if (!wrapper[0].children.length) {
             wrapper.remove();
           }
         });
@@ -242,12 +245,12 @@ mod.define('Animate.Elements', function() {
           index = parseInt(match[1], 10);
           if (index < animation.index) {
             animation.index = index;
-            animation.value = attr.value;
+            animation.value = attr.value.split(' ')[0];
           }
         }
       });
       if (indexOf(animation.value, animationsIn) != -1) {
-        $(el).addClass('am-hide');
+        $(el).addClass(hideClass);
       }
     });
 
