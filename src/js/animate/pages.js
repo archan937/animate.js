@@ -254,14 +254,6 @@ mod.define('Animate.Pages', function() {
     }
   },
 
-  showHideElements = function() {
-    $('[data-am-0],[data-am-1],[data-am-2],[data-am-3],[data-am-4],[data-am-5]').each(function(index, el) {
-      $(el).addClass('am-hide'); // TODO: only if first animation is an entrance animation!
-    });
-
-    $('#css-data-am').remove();
-  },
-
   animations = {
     'pushToLeft'          : ['moveToLeft', 'moveFromRight'],
     'pushToRight'         : ['moveToRight', 'moveFromLeft'],
@@ -401,8 +393,6 @@ mod.define('Animate.Pages', function() {
             }
           }
         }, 150);
-
-        showHideElements();
 
         on(selector, 'click', function(e, target) {
           var

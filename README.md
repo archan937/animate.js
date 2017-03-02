@@ -45,9 +45,9 @@ Finally, you can adjust the duration of the animation by adding a class in the f
 
 So for example:
 ```html
-    <h1 class="am-hide" data-am-0="bounceInDown" data-am-3="flipOutX">Hi there! Meet animate.js!</h1>
-    <h2 class="am-hide" data-am-1="bounceInLeft 0.5s" data-am-2="flipOutY">Add slick animations to your web pages and page transitions</h2>
-    <h1 class="am-hide" data-am-4="rollIn" data-am-5="rollOut">Using animate.js is really easy!</h1>
+    <h1 data-am-0="bounceInDown" data-am-3="flipOutX">Hi there! Meet animate.js!</h1>
+    <h2 data-am-1="bounceInLeft 0.5s" data-am-2="flipOutY">Add slick animations to your web pages and page transitions</h2>
+    <h1 data-am-4="rollIn" data-am-5="rollOut">Using animate.js is really easy!</h1>
 ```
 ### Credits
 

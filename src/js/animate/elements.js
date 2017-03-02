@@ -179,6 +179,7 @@ mod.define('Animate.Elements', function() {
     'fadeInUpBig',
     'flipInX',
     'flipInY',
+    'jello',
     'lightSpeedIn',
     'rotateIn',
     'rotateInDownLeft',
@@ -231,7 +232,27 @@ mod.define('Animate.Elements', function() {
     'zoomOutUp',
     'rollOut',
     'hinge'
-  ];
+  ],
+
+  showHideElements = function() {
+    $('body *').each(function(index, el) {
+      var animation = {index: 99999}, match, index;
+      Array.prototype.slice.call(el.attributes).forEach(function(attr) {
+        if (match = attr.name.match(/^data-am-(\d+)$/)) {
+          index = parseInt(match[1], 10);
+          if (index < animation.index) {
+            animation.index = index;
+            animation.value = attr.value;
+          }
+        }
+      });
+      if (indexOf(animation.value, animationsIn) != -1) {
+        $(el).addClass('am-hide');
+      }
+    });
+
+    $('#css-data-am').remove();
+  };
 
   return {
     Elements: {
@@ -336,6 +357,7 @@ mod.define('Animate.Elements', function() {
           delete iframe.halt;
         }
 
+        showHideElements();
         setTimeout(init, ms);
       },
 
