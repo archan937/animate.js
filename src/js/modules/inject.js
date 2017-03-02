@@ -60,7 +60,7 @@ mod.define('Inject', function() {
       if (!el) {
         head = ensureHead();
         el = document.createElement('style');
-        addClass(el, 'injected');
+        $(el).addClass('injected');
         head.insertBefore(el, head.childNodes[0]);
       }
 
