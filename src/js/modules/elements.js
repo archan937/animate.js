@@ -46,7 +46,7 @@ mod.define('Elements', function() {
       },
 
       is: function(sel) {
-        return indexOf(this, $(sel)) != -1;
+        return this.matches(sel);
       },
 
       html: function(val) {
@@ -141,7 +141,7 @@ mod.define('Elements', function() {
       },
 
       width: function() {
-        var c = computed(this);
+        var c = computedStyle(this);
         return parseInt(c.width) +
                parseInt(c.borderLeftWidth) +
                parseInt(c.paddingLeft) +
@@ -150,7 +150,7 @@ mod.define('Elements', function() {
       },
 
       height: function() {
-        var c = computed(this);
+        var c = computedStyle(this);
         return parseInt(c.height) +
                parseInt(c.borderTopWidth) +
                parseInt(c.paddingTop) +
@@ -167,7 +167,11 @@ mod.define('Elements', function() {
       },
 
       computedStyle: function() {
-        return computed.apply(window, [this].concat(Array.prototype.slice.call(arguments)));
+        return computedStyle.apply(window, [this].concat(Array.prototype.slice.call(arguments)));
+      },
+
+      cssRules: function() {
+        return cssRules.apply(window, [this].concat(Array.prototype.slice.call(arguments)));
       },
 
       attr: function() {
@@ -204,7 +208,7 @@ mod.define('Elements', function() {
         var key = arguments[0], value = arguments[1], prop;
         if (arguments.length == 1) {
           if (typeof(key) == 'string') {
-            return computed.apply(window, [this].concat(Array.prototype.slice.call(arguments)))[key];
+            return computedStyle.apply(window, [this].concat(Array.prototype.slice.call(arguments)))[key];
           } else {
             for (prop in key) {
               this.style[prop] = key[prop];

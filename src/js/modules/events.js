@@ -101,7 +101,11 @@ mod.define('Events', function() {
     },
 
     ready: function(fn) {
-      '\v' == 'v' ? setTimeout(fn, 0) : bind(document, 'DOMContentLoaded', function(){ setTimeout(fn, 0) });
+      if ((document.readyState == 'interactive') || (document.readyState == 'complete')) {
+        setTimeout(fn, 0);
+      } else {
+        bind(document, 'DOMContentLoaded', function() { setTimeout(fn, 0) });
+      }
     }
   };
 });

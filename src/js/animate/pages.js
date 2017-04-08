@@ -24,7 +24,7 @@ mod.define('Animate.Pages', function() {
     canvas.style.width = width + 'px';
     canvas.style.height = height + 'px';
 
-    if (computed(document.body)['background'].match(/rgba\(\d+, \d+, \d+, 0\)/)) {
+    if (computedStyle(document.body)['background'].match(/rgba\(\d+, \d+, \d+, 0\)/)) {
       canvas.style.background = 'white';
     }
 

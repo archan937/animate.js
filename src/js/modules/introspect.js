@@ -1,12 +1,14 @@
 mod.define('Introspect', function() {
   return {
     script: (function() {
-      var id = 'dummy', dummy, script, src, params = {}, pairs, pair, key, i;
-      document.write('<script id="' + id + '"></script>');
+      var id = 'dummy_script', dummy, script = document.getElementById(IDENTIFIER), src, params = {}, pairs, pair, key, i;
 
-      dummy = document.getElementById(id);
-      script = dummy.previousSibling;
-      dummy.parentNode.removeChild(dummy);
+      if (!script) {
+        document.write('<script id="' + id + '"></script>');
+        dummy = document.getElementById(id);
+        script = dummy.previousSibling;
+        dummy.parentNode.removeChild(dummy);
+      }
 
       src = script.getAttribute('src');
       pairs = ((src.match(/([\?]*)\?(.*)+/) || ['', '', ''])[2] || '').replace(/(^[0123456789]+|\.js(\s+)?$)/, '').split('&');
@@ -21,7 +23,9 @@ mod.define('Introspect', function() {
 
       return {
         el: script,
+        src: src.toLowerCase().replace(/\?.*/, ''),
         path: src.toLowerCase().replace(/[^\/]+\.js.*/, ''),
+        search: src.toLowerCase().replace(/^[^\?]+/, ''),
         params: params
       };
     }()),
@@ -78,8 +82,37 @@ mod.define('Introspect', function() {
       return bounds;
     },
 
-    computed: function(el) {
+    computedStyle: function(el) {
       return window.getComputedStyle(el);
+    },
+
+    cssRules: function(el) {
+      var
+        sheets = document.styleSheets,
+        rules = [],
+        i;
+
+      function collectRules(cssRules) {
+        var i, rule;
+        for (i = 0; i < cssRules.length; i++) {
+          rule = cssRules[i];
+          if (rule instanceof CSSMediaRule) {
+            if (window.matchMedia(rule.conditionText).matches) {
+              collectRules(rule.cssRules);
+            }
+          } else if (rule instanceof CSSStyleRule) {
+            if (el.matches(rule.selectorText)) {
+              rules.push(rule);
+            }
+          }
+        }
+      };
+
+      for (i = 0; i < sheets.length; i++) {
+        collectRules(sheets[i].cssRules);
+      }
+
+      return rules;
     },
 
     root: function(el) {

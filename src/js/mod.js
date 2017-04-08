@@ -9,10 +9,10 @@ mod = (function() {
     define: function(name, mod) {
       modules[name] = (typeof(mod) == 'function') ? mod : function() { return mod; };
     },
-    construct: function(init) {
-      var body = [], i, mod, module, prop = '__prop__';
+    construct: function(identifier, init) {
+      var body = ['var IDENTIFIER = \'' + identifier + '\''], i, mod, module, prop = '__prop__';
 
-      for (i = 1; i < arguments.length; i++) {
+      for (i = 2; i < arguments.length; i++) {
         mod = arguments[i];
         module = modules[mod];
 

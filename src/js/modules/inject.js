@@ -33,7 +33,7 @@ mod.define('Inject', function() {
         if (val[1])
           el.id = val[1];
         el.innerHTML = val[0];
-        head.insertBefore(el, head.childNodes[0]);
+        head.appendChild(el);
       }
 
       for (i = 0; i < registered.css.length; i++) {
@@ -42,7 +42,7 @@ mod.define('Inject', function() {
         if (val[1])
           el.id = val[1];
         el.innerHTML = val[0];
-        head.insertBefore(el, head.childNodes[0]);
+        head.appendChild(el);
       }
 
       for (i = 0; i < registered.html.length; i++) {
@@ -65,7 +65,7 @@ mod.define('Inject', function() {
       }
 
       css.push('\n' + selector + ' {');
-      for(attr in style) {
+      for (attr in style) {
         css.push('  ' + attr + ': ' + style[attr] + ';');
       };
       css.push('}');

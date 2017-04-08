@@ -10,7 +10,7 @@ if (typeof(Animate) == 'undefined') {
 // * $Date: {date} $
 // *
 
-Animate = define(function() {
+Animate = define('animate.js', function() {
 
   registerJS(@@html2canvasJS);
   registerCSS(@@animateCSS);
