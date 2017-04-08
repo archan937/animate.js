@@ -41,15 +41,10 @@ task :release, :version do |task, args|
   File.open("VERSION", "w").puts(args[:version])
 
   # Correct demo pages
-  `sed -i -- 's/src\\/animate/animate\\.min/g' #{release_dir}/demo/*.html`
+  `sed -i -- 's/build\\/js\\///g' #{release_dir}/demo/*.html`
   `rm #{release_dir}/demo/*.html--`
 
   # Compress release using YUI compressor
   `java -jar lib/yuicompressor-2.4.8.jar -v #{release_dir}/animate.js -o #{release_dir}/animate.min.js`
-end
-
-desc "Minify and gzip src/animate.js"
-task :compress do |task, args|
-  `java -jar lib/yuicompressor-2.4.8.jar -v src/animate.js -o src/animate.min.js`
-  `gzip -9cf src/animate.min.js > src/animate.min.js.gz`
+  `gzip -9cf #{release_dir}/animate.min.js > #{release_dir}/animate.min.js.gz`
 end
