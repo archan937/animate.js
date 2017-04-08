@@ -12,11 +12,11 @@ if (typeof(Animate) == 'undefined') {
 
 Animate = define('animate.js', function() {
 
-  registerJS(@@html2canvasJS);
-  registerCSS(@@animateCSS);
-  registerCSS(@@dataAmCSS, 'css-data-am');
-  registerCSS(@@elementsCSS);
-  registerCSS(@@pagesCSS);
+  registerJS(@@html2canvasJS, 'am-html2canvas');
+  registerCSS(@@animateCSS, 'am-animate');
+  registerCSS(@@opacCSS, 'am-opac');
+  registerCSS(@@elementsCSS, 'am-elements');
+  registerCSS(@@pagesCSS, 'am-pages');
 
   registerNext(Elements.next);
   registerBack(Elements.back);

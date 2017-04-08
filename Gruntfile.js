@@ -82,9 +82,9 @@ module.exports = function(grunt) {
               return util.inspect(grunt.file.read('build/css/ext/animate.min.css'));
             }
           }, {
-            match: 'dataAmCSS',
+            match: 'opacCSS',
             replacement: function() {
-              return util.inspect(grunt.file.read('build/css/animate/data-am.min.css'));
+              return util.inspect(grunt.file.read('build/css/animate/opac.min.css'));
             }
           }, {
             match: 'elementsCSS',

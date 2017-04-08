@@ -254,7 +254,7 @@ mod.define('Animate.Elements', function() {
       }
     });
 
-    $('#css-data-am').remove();
+    $('#am-opac').remove();
   };
 
   return {
