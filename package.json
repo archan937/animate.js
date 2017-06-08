@@ -1,6 +1,6 @@
 {
   "name": "animate.js",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "devDependencies": {
     "grunt": "1.0.1",
     "grunt-contrib-sass": "1.0.0",

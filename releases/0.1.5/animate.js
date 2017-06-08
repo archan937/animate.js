@@ -1763,13 +1763,13 @@ mod.define('Animate.Pages', function() {
 if (typeof(Animate) == 'undefined') {
 
 // *
-// * animate.js {version} (Uncompressed)
+// * animate.js 0.1.5 (Uncompressed)
 // * Add slick animations to your web pages and page transitions
 // *
-// * (c) {year} Paul Engel
+// * (c) 2017 Paul Engel
 // * animate.js is licensed under MIT license
 // *
-// * $Date: {date} $
+// * $Date: 2017-06-08 21:28:05 +0100 (Thu, 08 June 2017) $
 // *
 
 Animate = define('animate.js', function() {
@@ -1798,7 +1798,7 @@ Animate = define('animate.js', function() {
   });
 
   return {
-    version: '{version}',
+    version: '0.1.5',
     next: next,
     back: back,
     reset: reset,
