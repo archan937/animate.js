@@ -1,6 +1,5 @@
 mod.define('Elements', function() {
   var
-
     fn = {
       find: function(selector) {
         return $(selector, this);
@@ -55,6 +54,10 @@ mod.define('Elements', function() {
         } else {
           return this.innerHTML;
         }
+      },
+
+      val: function() {
+        return this.value;
       },
 
       root: function() {
@@ -315,7 +318,7 @@ mod.define('Elements', function() {
     },
 
   newElement = function(html) {
-    if ((typeof(html) == 'string') && html.match(/^\<(\w+)(.+\<\/\1)?\>$/m)) {
+    if ((typeof(html) == 'string') && html.match(/^\<(\w+)(.+(\<\/\1|\/?))?\>$/m)) {
       var el = document.createElement('div');
       el.innerHTML = html;
       return wrap(el.childNodes[0]);
@@ -375,7 +378,7 @@ mod.define('Elements', function() {
       return wrap([]);
     }
     if (!arg.at) {
-      if (arg.nodeType) {
+      if (arg.nodeType || !arg.entries) {
         arg = [arg];
       }
       for (var prop in fn) {
