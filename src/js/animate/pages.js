@@ -332,8 +332,9 @@ mod.define('Animate.Pages', function() {
 
       next: function(e) {
         e && (e.preventDefault ? e.preventDefault() : e.returnValue = false);
-        if (document.body.getAttribute('data-am-next-slide')) {
-          Pages.load(document.body.getAttribute('data-am-next-slide'));
+        var url = document.body.getAttribute('data-am-next-slide');
+        if (url) {
+          Pages.load(url);
           return false;
         }
       },

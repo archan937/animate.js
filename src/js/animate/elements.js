@@ -6,6 +6,7 @@ mod.define('Animate.Elements', function() {
     lock = 0,
     hideClass = 'am-hide',
     definedDurations = [],
+    maxStep,
 
   currentKey = function() {
     return 'data-am-' + step;
@@ -104,6 +105,9 @@ mod.define('Animate.Elements', function() {
 
           if (!wrapper[0].children.length) {
             wrapper.remove();
+            if (maxStep < step) {
+              $(window.frameElement || window).trigger('next');
+            }
           }
         });
 
@@ -238,11 +242,14 @@ mod.define('Animate.Elements', function() {
   ],
 
   showHideElements = function() {
+    maxStep = -1;
+
     $('body *').each(function(_index, el) {
       var animation = {index: 99999}, match, index;
       Array.prototype.slice.call(el.attributes).forEach(function(attr) {
         if (match = attr.name.match(/^data-am-(\d+)$/)) {
           index = parseInt(match[1], 10);
+          maxStep = Math.max(maxStep, index);
           if (index < animation.index) {
             animation.index = index;
             animation.value = attr.value.split(' ')[0];
